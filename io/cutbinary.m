@@ -1,4 +1,4 @@
-%function cutbinary(infname,outfname)
+%function state=cutbinary(infname,outfname,start,size,bufsize)
 % author: Ainray
 % date:2015/12/18
 % modified: 2015/12/26
