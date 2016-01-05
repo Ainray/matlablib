@@ -1,11 +1,11 @@
-% function m=equalen(x0,y0,z0)
+% function m=equalen(varargin)
 % author: Ainray
 % time  : 2016/1/3
 % version: 1.2
 % bug report: wwzhang0421@163.com
 % information: let the length of arrays be the same with padding zeros.
 % input:
-%    varargin, array list
+%    varargin, array list, it must contains at least two vectors.
 %              The first two parameters must be arrays. From three, we can pecify the mininum 
 %              slength, by transfering parameter-value pair, like, 'LenLimit',20; which indicating
 %              the mininum length is 20.

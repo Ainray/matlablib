@@ -2,7 +2,7 @@
 % author: Ainray
 % time  : 2015/7/26
 % bug report: wwzhang0421@163.com
-% information: de-select vector x by not selecting the elements indiced by indx.
+% information: de-select vector x by not selecting the elements indexed by indx.
 % input:
 %         x, data vector
 %      indx, selected indices 
