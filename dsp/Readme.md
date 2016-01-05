@@ -16,7 +16,14 @@ Function list
 			Introduciton: Add random noise specified by NSR, which is the signal STD divided 
 						  by noise STD, i.e., AC component.  Assuming that DC component of both
 						  signal and noise is zero.
-					
+		
+		analyticimpulse
+			Syntax: [g,t_s]=analyticimpulse(ps,offset,fs,...)
+			Introduciton: Calculating theorical earth impulse response.
+			
+		analyticstep
+			Syntax: [s,t_s]=analyticstep(ps,offset,fs,...)
+			Introduciton: Calculating theorical earth step response.
 
 		blackman_win
 			Syntax:h=blackman_win(N)
