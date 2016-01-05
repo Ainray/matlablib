@@ -45,6 +45,10 @@ Function list
 			Syntax: y=movingavgfilter(x,N)
 			Introduciton: Moving average filter, both ends will be unchanged after filtering.
 		
+		prbs_src
+			Syntax: [src_i,t_s,single_num]=prbs_src(t_ele,order,cycle,fs,type,I,...)
+			Introduciton: Generate m sereis.
+			
 		rect_win
 			Syntax: h=rect_win(tail,width,...)
 			Introduciton: Rectangle window family: rectangle, triangle and so on. 

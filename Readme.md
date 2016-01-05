@@ -1,6 +1,6 @@
 Author: Ainray
 Date: 20160105
-Version: 0.0
+Version: 1.0
 Bug-report: wwzhang0421@163.com
 Introduction: This library is a simple and general lib of matlab. Now it includes basic DSP tools,
 	exporting figures as files interface, deconvolution, and other generallay using tools.
@@ -31,9 +31,13 @@ General function list
 			Introduction: Finding discontinuies based start-setp-end triple.
 		
 		print_fig
-			Syntax:  print_fig(fname,fig_type,fig_res)
+			Syntax: print_fig(fname,fig_type,fig_res)
 			Introduction: High interface of exporting figures.
 		
+		rude
+			Syntax: p=rude(rep,vec)
+			Introduction: Repeat vector element with different times.
+			
 		sort_nat
 			Syntax: [cs,index] = sort_nat(c,mode)
 			Introduction: Sorting cell array naturally. 
