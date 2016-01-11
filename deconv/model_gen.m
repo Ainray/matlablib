@@ -64,7 +64,7 @@ switch(model_id)
             [x,tx,single_len]=prbs_src(t_ele,order,cycle,fs,1,1);
 
             % earth impulse in the homegeous earth
-            ps=50; offset=1000;len=3200;
+            ps=50; offset=1000;len=32000;
             time=time_vector(zeros(len,1),fs);
             [h,th]=analyticimpulse(ps,offset,fs,time);
             [s]=analyticstep(ps,offset,fs,time);
