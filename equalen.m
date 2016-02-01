@@ -34,8 +34,8 @@ function m=equalen(varargin)
   
   if v<num  % indicating have length limit
 	arr{[v+2:num]-2}=varargin{v+2:num};
-  else
-      arr{v}=varargin{v};  % the last
+  else  
+      arr{num}=varargin{num};  % the last
   end
   
   num=numel(arr); %update element number

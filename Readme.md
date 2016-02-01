@@ -37,7 +37,11 @@ General function list
 		rude
 			Syntax: p=rude(rep,vec)
 			Introduction: Repeat vector element with different times.
-			
+		
+		simplewaterfall
+			Syntax: simplewaterfall(x,z,step,scale,type,rcv,log,exc)
+			Introduction: plotting curves
+		
 		sort_nat
 			Syntax: [cs,index] = sort_nat(c,mode)
 			Introduction: Sorting cell array naturally. 

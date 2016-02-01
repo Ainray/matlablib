@@ -1,2 +1,3 @@
 #ignore temperal files created by matlab
 *.asv
+~*

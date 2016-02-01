@@ -2,7 +2,8 @@
 % author: Ainray
 % date: 2016/01/03
 % bug report: wwzhang0421@163.com
-% introduciton: Higth interface to export figures. 
+% introduciton: Interface to export figures with high resolution, simutaneously 
+%               saving '*.fig' file. 
 % syntax: print_fig('mypicture','-jpg','-m3');
 %   input:
 %      fname, file name of exported image file.
@@ -17,5 +18,7 @@
 %          (none)
 function print_fig(fname,fig_type,fig_res)
 set(gcf,'Color','w');
+saveas(gcf,fname,'fig');
 export_fig(fname,fig_type,fig_res);
+disp([fname,' succeed to be printed.']);
 % close ;

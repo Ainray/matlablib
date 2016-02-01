@@ -1,0 +1,25 @@
+Author: Ainray
+Date: 20160129
+Version: 1.0
+Bug-report: wwzhang0421@163.com
+Introduction: This library is a simple deconvolution toolkit. Deconvolution can be classified
+            : into two catagories, deterministic and blind. We concentrate on deterministic
+			: deconvolution. That is, in the LSI model: x(t)*h(t)=y(t), we both know the
+			: input and output to  solving the impulse response. Or equivalently, we know 
+            : the impulse response and the output, evaluating the input.			
+
+file system
+-----------
+	deconvolution functions, 	(function list)
+	README,						this document
+	Test.docx					deconvolution test report
+	Test.pdf					deconvolution test report
+	
+function list
+-------------
+	moden_gen
+		syntax: [x,h,y,ny,code]=moden_gen(model_id,prn)
+		introduction: generate deconvolution test model.
+	
+		
+		

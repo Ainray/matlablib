@@ -1,4 +1,4 @@
-% function [x,y]=model_gen(model_id,fig)
+% function [x,h,y,ny,code]=model_gen(model_id,fig)
 % author: Ainray
 % date: 22015/10/28
 % bug report: wwzhang0421@163.com
@@ -58,7 +58,7 @@ switch(model_id)
             set(gca,'xLim',[0,duration],'yLim',[-0.6,1.2]);
         end
     case 2 % model 2      
-            fs=16000;t_ele=1/512;order=7;cycle=50;  % 7-order prbs, sampling frequency is 16000
+            fs=16000;t_ele=1/512;order=7;cycle=1;  % 7-order prbs, sampling frequency is 16000
             code(1)=order;code(2)=512;code(3)=cycle;
             % prbs source
             [x,tx,single_len]=prbs_src(t_ele,order,cycle,fs,1,1);
@@ -77,16 +77,17 @@ switch(model_id)
             if fig
                 figure(12345);
                 subplot(2,2,1);
-                plot(tx(1:single_len(1)),x(1:single_len(1)));
+                plot(tx(1:single_len(1)),x(1:single_len(1)),'k','LineWidth',2);
                 xlabel('Time (s)');ylabel('Amplitude');title('a. 7-order PRBS source current');
                 set(gca,'xLim',[0,tx(single_len(1))],'yLim',[-1.2,1.2]);
-                subplot(2,2,2);plot(th,h);
-                xlabel('Time (s)');ylabel('Amplitude');title('b. The earth impulse ');
+                subplot(2,2,2);semilogx(th,h,'k','LineWidth',2);
+                xlabel('Time (log10(s))');ylabel('Amplitude');title('b. The earth impulse ');
+%                 set(gca,'xLim',[0,2]);
                 xlim=single_len(1)*10;
-                subplot(2,2,3);plot(tx(1:xlim),y(1:xlim));
+                subplot(2,2,3);plot(tx(1:xlim),y(1:xlim),'k','LineWidth',1.5);
                 xlabel('Time (s)');ylabel('Amplitude');title('c. Pure Observation');
                 set(gca,'xLim',[0,tx(xlim)]);
-                subplot(2,2,4);plot(tx(1:xlim),ny(1:xlim));
+                subplot(2,2,4);plot(tx(1:xlim),ny(1:xlim),'k','LineWidth',2);
                 xlabel('Time (s)');ylabel('Amplitude');title('d. Observation contaminated by 20% gaussian noise');
                 set(gca,'xLim',[0,tx(xlim)]);      
            end
