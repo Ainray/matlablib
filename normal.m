@@ -3,7 +3,7 @@
 % date: 20160130
 % version: 1.0
 % bug-report: wwzhang0421@163.com
-% introduction: normalizing matrix.
+% introduction: normalizing matrix by element with maximum absoulte value
 % input:
 %         z, original matrix
 %       dim, if 1, matrix arranged by column, the default value

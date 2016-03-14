@@ -15,7 +15,9 @@ Toolkit list
 		
 General function list
 ---------------------
-
+		cellstrindx
+			Syntax: x=cellstrindx(c,indx) 
+			Introduction:return the partitions of the elements 
 		deselect
 			Syntax: dx=deselect(x,indx)
 			Introduction: De-select vector x by not selecting the elements indexed by indx.
@@ -50,6 +52,12 @@ General function list
  								{'file1.txt'  'file10.txt'  'file2.txt'}
  						  whereas, sort_nat will give you
 								{'file1.txt'  'file2.txt'  'file10.txt'}
+		strfindindx
+			Syntax: i,k]=strfindindx(c,pat) 
+			Introduction: return the indices of any occurrences of the string 'pat'
+						: in the cell array c, and also return the starting indices 
+						: if some element of c matching pat according to strfind function
+			
 		time_vector
 			Syntax: t_v=time_vector(x,fs,start)
 			Introduction: Give time abscissa for a series.

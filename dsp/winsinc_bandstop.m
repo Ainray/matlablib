@@ -27,7 +27,8 @@ while( length(fc)~=2 )
     end
 end
 while( mod(N,2)~=1)
-    N=input('The filter length must be odd: ');
+%     N=input('The filter length must be odd: ');
+    N=N+1;
 end
 
 while( pass~=1 && pass~=2)

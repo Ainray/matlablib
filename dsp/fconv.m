@@ -19,6 +19,9 @@ function [y]=fconv(x, h)
 
 Ly=length(x)+length(h)-1;  % 
 Ly2=pow2(nextpow2(Ly));    % Find smallest power of 2 that is > Ly
+
+%Ly2 always is greater than Ly=length(x)+length(h)-1, no aliasing occurs
+
 X=fft(x, Ly2);              % Fast Fourier transform
 H=fft(h, Ly2);	           % Fast Fourier transform
 Y=X.*H;        	           % 

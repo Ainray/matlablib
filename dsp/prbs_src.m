@@ -68,7 +68,7 @@ function plot_(src_i,fs,n)
         if nargin==2
             n=length(src_i);
         end
-        t=(1:n)/fs;
+        t=(0:n-1)/fs;
         plot(t,src_i(1:n),'r.');
         hold on;
         plot(t,src_i(1:n));

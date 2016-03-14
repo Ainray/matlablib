@@ -129,7 +129,7 @@ ylabel('Energy Distribution');
 if fr==2
 subplot(2,1,1);
 t_s=time_vector(x,fs);
-plot(t_s,x,'clr');
+plot(t_s,x,clr);
 title('Input Series');
 xlabel('Time (s)');
 ylabel('Amplitude');

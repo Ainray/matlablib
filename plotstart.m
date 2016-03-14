@@ -1,4 +1,4 @@
-% function plot_start(x0,x1,fs,ratio,N,start_,varargin)
+% function plotstart(m,varargin)
 % author: Ainray
 % date: 20160111
 % bug-report: wwzhang0421@163.com
@@ -13,10 +13,11 @@
 %           'Start',1           starting index of all lines 
 %           'XScale','linear'   linear ('linear') or logarithmic('log') scaling for x axis  
 %           'YScale','linear'   linear ('linear') or logarithmic('log') scaling for x axis       
+%           'IsErr', 0          plot error bar or not, now no impletmentation
 %     output:
 %           (none)
 
-function plot_start(m,varargin)
+function plotstart(m,varargin)
    p = inputParser;
    defaultfs = 1;   % default sampling rate
    defaultratio=1;  % default sclaing ratio (scale or array)
@@ -61,6 +62,7 @@ function plot_start(m,varargin)
         hold on;
    end
    set(gca,'Xscale',p.Results.Xscale,'Yscale',p.Results.Yscale);
+   hold off;
 %     std=size(varargin,2);
 %     
 %     lr=length(ratio);
