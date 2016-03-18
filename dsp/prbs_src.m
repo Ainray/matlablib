@@ -1,7 +1,9 @@
 %function [src_i,t_s,single_num]=prbs_src(t_ele,order,cycle,fs,type,I,pic,n)
 % author: Ainray
 % date: 2014/11/29
-% modified: 2015/4/16,2015/7/28
+% modified: 2015/4/16,2015/7/28,20160318
+%           20160318, add a parameter to control the idle time, the pic and n
+%                     are shifted backward.
 % bug report: wwzhang0421@163.com
 % introduction: generate the m sequence
 %    input:
@@ -11,6 +13,7 @@
 %             fs, the sampling frequency
 %           type, from the mode 0 or matlab interiorly 1
 %              I, the amplitude of m sequece
+%          idlet, idlte time per cycle (add by Ainray, on 20160315 
 %            pic, whether plot the source or not
 %              n, the sampling number to be plotted
 %   output:
@@ -18,19 +21,23 @@
 %            t_s, the time series of source
 %     single_num, the number of sample per period
 
-function [src_i,t_s,single_num]=prbs_src(t_ele,order,cycle,fs,type,I,pic,n)
-    error(nargchk(6,8,nargin,'struct')); %check the input arguments
+function [src_i,t_s,single_num]=prbs_src(t_ele,order,cycle,fs,type,I,idlet,pic,n)
+    narginchk(6,9); %check the input arguments
     if nargin<7
+        idlet=0;
+    end
+    if nargin<8
         pic=0;          % no ploting
     end
     num_ele=2^order-1;                   % the number of elements of one period
     if type==0  % mode  
         m_series=prbs_(order);  % from generated file
-        m_series(find(m_series==0))=-1;
+        m_series(m_series==0)=-1;
     else
          m_series=idinput(num_ele,'prbs');    % m sequence
     end
-    tmp=repmat(m_series,floor(cycle),1);% periodic extension
+    % periodic extension
+    tmp=repmat([m_series;zeros(floor(idlet/t_ele),1)],floor(cycle),1);
     m_series=[tmp',tmp(1:ceil((cycle-floor(cycle))*num_ele))']';  
     %%%%%%%%% sampling%%%%%%%%%%
     num_all_ele=length(m_series);   %number of all elements
@@ -57,7 +64,7 @@ function [src_i,t_s,single_num]=prbs_src(t_ele,order,cycle,fs,type,I,pic,n)
     t_s=time_vector(src_i,fs);
     if(pic~=0)
         figure;
-        if nargin==7
+        if nargin==8
             n=length(src_i);
         end
         plot_(src_i,fs,n);

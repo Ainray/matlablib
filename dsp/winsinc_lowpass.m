@@ -20,10 +20,11 @@ if nargin<4
     window='blackman';
 end
 while( fc>0.5 || fc<0)
-    fc=input('The cufoff frequency must be from 0 to 0.5');
+    fc=input('The cufoff frequency must be from 0 to 0.5:  ');
 end
 while( mod(N,2)~=1)
-    N=input('The filter length must be odd');
+%     N=input('The filter length must be odd');
+      N=N+1;
 end
 while( pass~=1 && pass~=2 && pass~=4)
     pass=input('The filtering time must be 1, 2, or 4 :  ');

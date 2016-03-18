@@ -1,4 +1,4 @@
-% function maxmins=peak(x)
+% function [maxmins,fmax]=peak(x)
 % author: Ainray
 % date: 20160308
 % version: 1.0
@@ -8,6 +8,9 @@
 %        x, the input
 % output:
 %  maxmins, the peaks
+%     fmax, indicate the first maximum index, it may be 1, indicating the funcion
+%           is monotonous;it may be 2, indicating first increases, then deceases,
+%           it may be 3, indicating first decreases, then increases
 function [maxmins,fmax]=peak(x)
       % find local max/min points
       N=length(x);

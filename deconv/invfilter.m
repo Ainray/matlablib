@@ -56,11 +56,11 @@
 
 function [h,invF]=invfilter(x,y,varargin)
     p=inputParser;
-    
     addRequired(p,'x',@isnumeric);
     addRequired(p,'y',@isnumeric);
     addOptional(p,'Level',0.1,@isnumeric);
-    addOptional(p,'Method','plus',@isstr);
+    addOptional(p,'Method','plus', @(x) any(validatestring(x,...
+        {'plus','level','third'})));
     addOptional(p,'Length',16000,@isnumeric);
     addOptional(p,'Gauss',false, @islogical);
     addOptional(p,'GaussLamda',0.5,@isnumeric);
@@ -76,11 +76,9 @@ function [h,invF]=invfilter(x,y,varargin)
     ispolyfit=p.Results.PolyFit;
     polyfitorder=p.Results.PolyFitOrder;
     
-    while ~strcmp(method,'plus') && ~strcmp(method,'level') &&~strcmp(method,'third') 
-        method=input(['The method setting water level support three values: ',...
-            '''plus'' ','''level''','''third''','\n' ]);
-    end
-%     N=2^nextpow2(max(length(x),length(y)));
+    x=v2col(x);y=v2col(y);
+ 
+   %     N=2^nextpow2(max(length(x),length(y)));
     N=max(length(x),length(y));
 %     if nargin<5
 %         len=N;
@@ -138,5 +136,5 @@ function [h,invF]=invfilter(x,y,varargin)
     h=hp;
     end
     %truncatation
-    h=h(1:len);
+    h=h(1:min(len,N));
    
