@@ -459,7 +459,7 @@ if isvector(options)
 end
 if cls
     % Close the created figure
-    close(fig);
+%     close(fig);
 else
     % Reset the hardcopy mode
     set(fig, 'InvertHardcopy', old_mode);

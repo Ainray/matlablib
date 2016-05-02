@@ -30,11 +30,11 @@ while( pass~=1 && pass~=2 && pass~=4)
     pass=input('The filtering time must be 1, 2, or 4 :  ');
 end
 % correct the cutoff frequency
-if pass==2
-    fc=fc+0.5/N+0.02285/N;
-elseif pass==4
-    fc=fc+1/N+0.05/N;
-end
+% if pass==2
+%     fc=fc+0.5/N+0.02285/N;
+% elseif pass==4
+%     fc=fc+1/N+0.05/N;
+% end
 r1=zeros(N,1);
 %calculating the windowed sinc
 indx=[0:(N-3)/2,(N+1)/2:N-1]'; 

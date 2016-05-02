@@ -6,10 +6,12 @@
 % reference:
 %      [1] Ziolkowski A.,2007, Multitransient electromagnetic demonstration survey in France
 %      [2] Pesce K. A., 2010, Comparison of receiver function deconvolution techniques.
+%      [3] Smith, Steven W., 1997, The Scientist and Engineeer's Guide to Digital Signal Processing  
 % input:
 %    model_id, the model id: 
 %              model 1: source wavelet and receiver function, sampling rate: 100Hz
 %              model 2: MTEM,source prbs: 7 order,sampling rate:16KHz
+%              model 3: gamma ray deletor, sampling rate 1, refer to [3], pp.301-306
 %         fig, whether plot figures or not
 % output: 
 %           x, the input
@@ -43,7 +45,7 @@ switch(model_id)
 
         %figure
         if fig
-            figure(12345)
+            figure(12345);
             subplot(2,2,1);plot(time_vector(x,fs),x,'k','LineWidth',2);
             xlabel('Time (s)');ylabel('Amplitude');title('a. Source wavelet');
             set(gca,'xLim',[0,duration],'yLim',[-0.2,1.2]);
@@ -57,7 +59,8 @@ switch(model_id)
             xlabel('Time (s)');ylabel('Amplitude');title('d. Observation contaminated by 20% gaussian noise');
             set(gca,'xLim',[0,duration],'yLim',[-0.6,1.2]);
         end
-    case 2 % model 2      
+    case 2 % model 2
+            figure(12345)
             fs=16000;t_ele=1/512;order=7;cycle=1;  % 7-order prbs, sampling frequency is 16000
             code(1)=order;code(2)=512;code(3)=cycle;
             % prbs source
@@ -84,11 +87,35 @@ switch(model_id)
                 xlabel('Time (log10(s))');ylabel('Amplitude');title('b. The earth impulse ');
 %                 set(gca,'xLim',[0,2]);
                 xlim=single_len(1)*10;
-                subplot(2,2,3);plot(tx(1:xlim),y(1:xlim),'k','LineWidth',1.5);
+                subplot(2,2,3);plot(tx(1:xlim),y(1:xlim),'k','LineWidth',2);
                 xlabel('Time (s)');ylabel('Amplitude');title('c. Pure Observation');
                 set(gca,'xLim',[0,tx(xlim)]);
                 subplot(2,2,4);plot(tx(1:xlim),ny(1:xlim),'k','LineWidth',2);
                 xlabel('Time (s)');ylabel('Amplitude');title('d. Observation contaminated by 20% gaussian noise');
                 set(gca,'xLim',[0,tx(xlim)]);      
-           end
+            end
+    case 3 % model 3
+        x=zeros(1,450);
+        x([41,101,191,202,280,375,385,395,420]-10)=1;
+        h=[zeros(1,6),0.53,0.8,0.99,1,exp(-([0:40]+0.05)/8)];
+        y=fconv(x,h);
+        ny=addnoise(y,20);
+        if fig
+            figure(12345);
+            subplot(2,2,1);
+            plot(x,'k','LineWidth',2); xlabel('Time (Sample)');ylabel('Amplitude');
+            title('a. Random  arriving event of gramma rays');
+            set(gca,'ylim',[-0.5,1.5]);
+            subplot(2,2,2);
+            plot(h,'k','LineWidth',2);set(gca,'ylim',[-0.5,1.5]);
+            xlabel('Time (Sample)');ylabel('Amplitude');
+            title('b. impulse response of a gamma ray detector');
+            subplot(2,2,3);
+            plot(y,'k','LineWidth',2);set(gca,'ylim',[-0.5,1.5]);
+            xlabel('Time (Sample)');ylabel('Amplitude');title('c. Pure Observation');
+            subplot(2,2,4);
+            plot(ny,'k','LineWidth',2);set(gca,'ylim',[-0.5,1.5]);
+            xlabel('Time (Sample)');;ylabel('Amplitude');
+            title('d. Observation contaminated by 20% gaussian noise');
+        end
 end

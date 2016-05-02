@@ -17,5 +17,9 @@ if iscell(c)
     k=v2col(cell2mat(tmp(i)));
 else
     k=strfind(c,pat);
-    i=1;
+    if isempty(k)
+        i=[];
+    else
+        i=1;
+    end
 end

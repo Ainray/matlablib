@@ -21,7 +21,8 @@ while( fc>0.5 || fc<0)
     fc=input('The cufoff frequency must be from 0 to 0.5');
 end
 while( mod(N,2)~=1)
-    N=input('The filter length must be odd');
+%     N=input('The filter length must be odd');
+    N=N+1;
 end
 
 while( pass~=1 && pass~=2 && pass~=4)
@@ -35,16 +36,17 @@ end
 % else
 
 % correct the cutoff frequency
-if pass==2
-    fc=fc-0.5/N-0.0234/N;
-elseif pass==4
-    fc=fc-1/N+0.05/N;
-end
+% if pass==2
+%     fc=fc-0.5/N-0.0234/N;
+% elseif pass==4
+%     fc=fc-1/N+0.05/N;
+% end
 %frequency invsersion
     
     r1=winsinc_lowpass(fc,N);
-    r1=-r1; 
+    r1=-r1;  % spectrum inversion, transform low-pass into high-pass
     r1((length(r1)+1)/2)=r1((length(r1)+1)/2)+1;
+%     h=r1/sum(r1);
 %     h=h/sum(h);
 % end
 

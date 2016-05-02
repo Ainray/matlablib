@@ -1,94 +1,98 @@
-% function simplewaterfall(x,z,type,rcv,step,scale,log,exc,mx)
-% simplewaterfall is a simple version of waterfall, used to dispaly multi
-% trace data in the same temporal or spacical scale
-% Input:
-%       x, the temporal or spacial sampling node, more closer to the top or
-%          the left, more early or more near
-%       z, the multi-channel data, every column is a time series of a
-%          receiver, more closer to the top, the more previous time from now
-%         
-%    step, the step between two traces, supporting  varying step
-%   scale, the scale vetor, supporting diffrent scaling for different trace
-%    type, some common display ways: 1. like seismic section time series in 
-%          the same spacial scale. 2. spacial series in the same temporal
-%          scale.  3. like 2, but filled, 4, like  
-%     rcv, the postion indices
-%     log, whether abscissa using logarithmic scale,if not, unset; else, set
-%     exc, the exclued trace indices or temporal node indices
-%      mz, maximum values
-function simplewaterfall(x,z,type,rcv,mx,log,step,scale,exc)
-[m,n]=size(z);
-x=v2col(x);
-if nargin<3
-    type=2;
-end
-if nargin<4
-    rcv=[0:n+1];  % real ordinates
-end
-if nargin<5
-    mx=max(z);
-end
-if nargin<6
-    log=0;
-end
-if nargin<7
-    step=ones(n,1);
-end
-if nargin<8
-    scale=ones(1,n)*0.4;
-end
+function simiplewaterfall(z,varargin)
 
-if nargin<9
-    exc=-1; 
-end
 
-scales_={'linear','log'};
-if exc~=-1
-    z(:,exc)=zeros(m,length(exc));   % filling columns with zeros.
-end
-ordinate=v2row(cumsum(step));    % ordinates
-scalemat=ones(m,1)*v2row(scale); % scaling matrix
-stepmat=ones(m,1)*ordinate;      % ordinates matrix, i.e.,center lines
-mz=z.*scalemat+stepmat;          % scaled and shifted data
-%
-% muptiple profiles with the same abscissa      
-%
-if type==3 || type==4
-    clr='r';
-else
-    clr='k';
-end
-plot(x,mz,clr);  % plot curves
-hold on; 
-% plot([x(1),x(end)],[ordinate;ordinate]','k');  %plot center lines
-set(gca,'yTick',cumsum([0,v2row(step),step(end)])...
-    ,'yTickLabel',num2str(v2col(rcv)),'xscale',scales_{log+1});  
-axis([x(1),x(end),0,n+1]);
-if type==3
-%
-% fill
-%
-X=[x',fliplr(x')]'; % two parts for upper and low bound, the vector will
-                    % be extended automatically
-Y=[stepmat;flipud(mz)];     %stepmat serves as axis bound(center line),
-                            %mz serves as curve bound
-% if the case is simple, where the curve is entirely above 
-% the center axis, you just first step forward along the axis,
-% then back along the curve                                    
-hf=fill(X,Y,'r');
-set(hf,'edgecolor','none');  
-xlabel('Time (s)');
-% set text
-% text(x(max(length(x)-20000,1))*ones(n-1,1),v2col(cumsum(step(1:n-1))+0.5),...
-%     strcat('(max=',num2str(v2col(mx(1:n-1)),'%.2E'),...
-%     ', $\delta=$',num2str(10.^(1:9)','%.2E'),')'), 'interpreter','latex'...%);
-%     ,'Fonts',10,'FontN','arial', 'Hor','center','Ver','cap');
-% text(x(end-16020),sum(step)+0.5,strcat('orignal',', max=',...
-%     num2str(mx(end),'%.2E')),'Fonts',10,'FontN','arial', 'Hor','center','Ver','cap');
-% cantenate peaks
-[mm,mi]=max(mz);
-semilogx(x(mi),mm,'k');
-end
+%---------------------version 1.1, obscured--------------------------------%
+% % function simplewaterfall(x,z,type,rcv,step,scale,log,exc,mx)
+% % simplewaterfall is a simple version of waterfall, used to dispaly multi
+% % trace data in the same temporal or spacical scale
+% % Input:
+% %       x, the temporal or spacial sampling node, more closer to the top or
+% %          the left, more early or more near
+% %       z, the multi-channel data, every column is a time series of a
+% %          receiver, more closer to the top, the more previous time from now
+% %         
+% %    step, the step between two traces, supporting  varying step
+% %   scale, the scale vetor, supporting diffrent scaling for different trace
+% %    type, some common display ways: 1. like seismic section time series in 
+% %          the same spacial scale. 2. spacial series in the same temporal
+% %          scale.  3. like 2, but filled, 4, like  
+% %     rcv, the postion indices
+% %     log, whether abscissa using logarithmic scale,if not, unset; else, set
+% %     exc, the exclued trace indices or temporal node indices
+% %      mz, maximum values
+% function simplewaterfall(x,z,type,rcv,mx,log,step,scale,exc)
+% [m,n]=size(z);
+% x=v2col(x);
+% if nargin<3
+%     type=2;
+% end
+% if nargin<4
+%     rcv=[0:n+1];  % real ordinates
+% end
+% if nargin<5
+%     mx=max(z);
+% end
+% if nargin<6
+%     log=0;
+% end
+% if nargin<7
+%     step=ones(n,1);
+% end
+% if nargin<8
+%     scale=ones(1,n)*0.4;
+% end
+% 
+% if nargin<9
+%     exc=-1; 
+% end
+% 
+% scales_={'linear','log'};
+% if exc~=-1
+%     z(:,exc)=zeros(m,length(exc));   % filling columns with zeros.
+% end
+% ordinate=v2row(cumsum(step));    % ordinates
+% scalemat=ones(m,1)*v2row(scale); % scaling matrix
+% stepmat=ones(m,1)*ordinate;      % ordinates matrix, i.e.,center lines
+% mz=z.*scalemat+stepmat;          % scaled and shifted data
+% %
+% % muptiple profiles with the same abscissa      
+% %
+% if type==3 || type==4
+%     clr='r';
+% else
+%     clr='k';
+% end
+% plot(x,mz,clr);  % plot curves
+% hold on; 
+% % plot([x(1),x(end)],[ordinate;ordinate]','k');  %plot center lines
+% set(gca,'yTick',cumsum([0,v2row(step),step(end)])...
+%     ,'yTickLabel',num2str(v2col(rcv)),'xscale',scales_{log+1});  
+% axis([x(1),x(end),0,n+1]);
+% if type==3
+% %
+% % fill
+% %
+% X=[x',fliplr(x')]'; % two parts for upper and low bound, the vector will
+%                     % be extended automatically
+% Y=[stepmat;flipud(mz)];     %stepmat serves as axis bound(center line),
+%                             %mz serves as curve bound
+% % if the case is simple, where the curve is entirely above 
+% % the center axis, you just first step forward along the axis,
+% % then back along the curve                                    
+% hf=fill(X,Y,'r');
+% set(hf,'edgecolor','none');  
+% xlabel('Time (s)');
+% % set text
+% % text(x(max(length(x)-20000,1))*ones(n-1,1),v2col(cumsum(step(1:n-1))+0.5),...
+% %     strcat('(max=',num2str(v2col(mx(1:n-1)),'%.2E'),...
+% %     ', $\delta=$',num2str(10.^(1:9)','%.2E'),')'), 'interpreter','latex'...%);
+% %     ,'Fonts',10,'FontN','arial', 'Hor','center','Ver','cap');
+% % text(x(end-16020),sum(step)+0.5,strcat('orignal',', max=',...
+% %     num2str(mx(end),'%.2E')),'Fonts',10,'FontN','arial', 'Hor','center','Ver','cap');
+% % cantenate peaks
+% [mm,mi]=max(mz);
+% semilogx(x(mi),mm,'k');
+% end
 %         Y2=mz;
 %         y2=z(:,i)*scale(i)+sum(step(1:i));y2=y2';
 %         y1=ones(1,length(x))*sum(step(1:i));

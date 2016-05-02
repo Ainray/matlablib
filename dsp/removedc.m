@@ -23,13 +23,20 @@ N=length(x);
 if nargin<2
 	ssn=[1,N,1];
 end
-start=ssn(1);  % start
+start=1;  % start
 step=ssn(2);   % step
-number=ssn(3); % number of segments
+if step>=N
+    number=1;
+else
+    number=min(floor(N/step),ssn(3)); % number of segments
+end
 dc=[];
 y=x;
  for i=1:number % number is the times of calculating impules    
     end_=start+step-1;
+    if end_>N && i==1
+        end_=N;
+    end
 	if end_<=N
 		dctmp=mean(x( start:end_));
         dc=[dc,dctmp];
@@ -37,7 +44,8 @@ y=x;
         start=start+step;
     end
  end
-if end_<N
+ 
+if N>i*step  % the last segment
 	dctmp=mean(x( start:end));
 	dc=[dc,dctmp];
 	y(start:end)=x(start:end)-dctmp;

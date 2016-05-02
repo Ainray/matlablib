@@ -58,7 +58,7 @@ function [h,invF]=invfilter(x,y,varargin)
     p=inputParser;
     addRequired(p,'x',@isnumeric);
     addRequired(p,'y',@isnumeric);
-    addOptional(p,'Level',0.1,@isnumeric);
+    addOptional(p,'Level',0.0001,@isnumeric);
     addOptional(p,'Method','plus', @(x) any(validatestring(x,...
         {'plus','level','third'})));
     addOptional(p,'Length',16000,@isnumeric);
@@ -108,14 +108,15 @@ function [h,invF]=invfilter(x,y,varargin)
     end
     invF=F;%real(ifft(F,N));
     % the frequency response
+    if isgauss
+        G=dft_gauss(N,lamda,'one-side');
+        F=F.*G;
+    end
     H=F.*Y;
     
     % Gaussian filter, the default filter paramter is 0.25, i.e., the cut-off 
     % frequency is set to be 0.125*16000=2000Hz
-    if isgauss
-        G=dft_gauss(N,lamda,'one-side');
-        H=H.*G;
-    end
+  
     % reback to time domain, obtainning the impules response
     h=real(ifft(H,N));
     h=inversephase(h);

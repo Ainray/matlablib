@@ -1,4 +1,6 @@
 % function x=levidurb(r,b)
+% author: Ainray
+% bug-report: wwzhang0421@163.com
 % levinson-durbin algorithm for solving Yule-Walker equations 
 % Input: 
 %        r, n length of vector, r(2:n) is used to generate n*n Toeplitz

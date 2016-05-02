@@ -13,7 +13,8 @@
 %           'Start',1           starting index of all lines 
 %           'XScale','linear'   linear ('linear') or logarithmic('log') scaling for x axis  
 %           'YScale','linear'   linear ('linear') or logarithmic('log') scaling for x axis       
-%           'IsErr', 0          plot error bar or not, now no impletmentation
+%           'Removedc' ture,    remove dc or not
+%           'IsErr', false      plot error bar or not, now no impletmentation
 %     output:
 %           (none)
 
@@ -38,17 +39,22 @@ function plotstart(m,varargin)
                  @(x) any(validatestring(x,expectedscale)));
    addOptional(p,'Yscale',defaultyscale,...
                  @(x) any(validatestring(x,expectedscale)));
-   addOptional(p,'IsErr',0);
+   addOptional(p, 'Removedc',false,@islogical);
+   addOptional(p,'IsErr',false, @islogical);
    parse(p,m,varargin{:});
    fs=p.Results.SamplingRate; 
    ratio=p.Results.Ratio;
    N=p.Results.Length;
-   start_=p.Results.Start;   
+   start_=p.Results.Start;
+   isrmdc=p.Results.Removedc;
    clr=['-r','-b','-c','-m','-y','-g','+r','og','*b','.c','xm','sy','dr'];
    if length(ratio)<size(m,2)
        ratio(length(ratio):size(m,2))=ratio(1);
    end
-   
+   if isrmdc 
+       avg=ones(size(m,1),1)*mean(m);
+       m=m-avg;
+   end
    if p.Results.IsErr
        subplot(2,1,2);
        plot([start_:start_+min(N,length(m(:,1)))-1]/fs,abs((m(start_:start_+min(N,length(m(:,1)))-1,2)-...

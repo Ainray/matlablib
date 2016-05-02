@@ -1,4 +1,4 @@
-% function [...]=gauss_src(N,lamda,mode)
+% function [...]=dft_gauss(N,lamda,mode)
 % author: Ainray
 % date: 20160313
 % bug report: wwzhang0421@163.com
@@ -41,18 +41,23 @@
 %      mode, 'symmetric', the window have odd samples.if N is even, padding one sample.
 %                         the window have sysmmetric zeros at both left and right ends.
 %            'one-side',  return N samples, only the left zero is guaranted.
+%  monospec,  true/false, whether  the spectrum is monotonously descreased or not
 % output:
 %         W, the freqency window, shiffted so the window
 %            is even about zero( with respect to periodal
 %            extension)
 %         w, the corresponding time window
-function varargout=dft_gauss(N,lamda,mode)
+function varargout=dft_gauss(N,lamda,mode,monospec)
 if nargin<2
    lamda=0.5;
 end
 if nargin<3
     mode='symmetric';
 end
+if nargin<4
+    monospec=0;
+end
+
 while strcmp(mode,'symmetric')==0 && strcmp(mode,'one-side')==0
     mode=input('mode must be either ''symmetric'' or ''one-side'': ');
 end
@@ -72,6 +77,14 @@ else
     wf=dft_shift(wf,floor(N/2));
     wt=0.5*sqrt(pi)*lamda*exp(-0.25*pi^2*lamda^2*n.^2);
 end
+if monospec
+    mid=floor((N+1)/2); 
+    f=n(mid:N)/floor(N/2);     
+    f(mid:N)=f(mid-1)+(f(mid-1)-f(mid-2))*((mid:N)-mid+1);
+    wf=exp(-f.^2/lamda/lamda);
+end
+wf=wf/sum(wt);
+wt=wt/sum(wt);
 
 if nargout>3
     error('Wrong output arguments\n');
