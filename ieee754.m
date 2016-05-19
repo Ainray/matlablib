@@ -8,8 +8,13 @@ function [s,e,f] = ieee754(x,fmt,pre)
 %       [s,e,f]=ieee754(-5.5,'dec','single')
 %       [s,e,f]=ieee754(-5.5,'bin','single')
 %       [s,e,f]=ieee754(1.316554e-36,'bin','single')
-%
-% 
+%       [s,e,f]=ieee754(0.00001233862713,'dec','single')
+%       [s,e,f]=ieee754(1,'dec','single')
+%       [s,e,f]=ieee754(1.996093750,'dec','single')
+%       [s,e,f]=ieee754(636.0312500,'dec','single')
+%       [s,e,f]=ieee754(217063424.0,'dec','single')
+
+
 %IEEE754 Decompose a double precision floating point number.
 % [S,E,F] = IEEE754(X) returns the sign bit, exponent, and mantissa of an
 % IEEE 754 floating point value X, expressed as binary digit strings of
@@ -85,7 +90,8 @@ else
   e = bitstr(seg(1):seg(2)-1);
   f = bitstr(seg(2):N);
   if nargin > 1 && isequal(lower(fmt),'dec')
-    s = bin2dec(s);  e = bin2dec(e);
+    s = bin2dec(s);  
+    e = bin2dec(e);
     f = eval(['Fr_bin2dec(.',f,')']);
   end
 end
