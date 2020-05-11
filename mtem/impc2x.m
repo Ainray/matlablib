@@ -1,0 +1,34 @@
+function impc2x(impc)
+N=numel(impc);
+for i=1:N
+    impx(i)=initialimp;
+    g=inversephase(impc(i).g);
+    g=sub50hz(g,320,2);
+    impx(i).g=g;
+    impx(i).mask=1;
+    impx(i).bg=g;
+    impx(i).ng=g;
+    impx(i).ts=impc(i).t_s;
+    sx=impc(i).shot_num;
+    rx=impc(i).rcv_num;
+    impx(i).meta.srcpos=sx;
+    impx(i).meta.rcvpos=rx;
+    impx(i).meta.recnum=str2double(impc(i).rec_num);
+    impx(i).meta.cmp=(sx+rx)/2;
+    impx(i).meta.offset=sx-rx;
+    impx(i).meta.code=impc(i).code;
+    order=impc(i).code(1); 
+    fe=impc(i).code(2);
+    ncpp=2^order-1;
+    fs=16000;
+    impx(i).meta.ncpp=ncpp;
+    impx(i).meta.npp=floor(ncpp/fe*fs);
+    impx(i).meta.fs=fs;
+    impx(i).meta.rcvsn=impc(i).rcv_sn;
+    impx(i).meta.rcvch=str2double(impc(i).rcv_ch);
+    impx(i).para.length=length(g);
+    impx(i).para.srcsn=1312;
+    impx(i).para.srcch=0;
+    impx(i)=peakimp(impx(i));  
+end
+saveimp(impx,'impcsy_xaformat');

@@ -1,0 +1,49 @@
+function imp=initialimp
+% initializing the element of  imp array of structure
+% (member)
+tmp.g=0;       	%	EIR
+tmp.ng=0;       %   50Hz notcher
+tmp.bg=0;       %   back up the orignal calculated EIR
+tmp.ag=0;		%	analytic EIR
+tmp.r=0;        %   for wiener, auto correlation
+tmp.b=0;        %   for wiener, cross correlation
+tmp.ts=0;		%   EIR time abscissa
+tmp.pv=0;		%   peak value
+tmp.cpv=0;      %   current peak value
+tmp.apv=0;      %   peak value of analytic EIR
+tmp.pn=0;		%   peak time (samples)
+tmp.cpn=0;		%   peak time (second)
+tmp.rho=0;		%   apparent resistivity
+tmp.mask=1;     %   assuming effective data
+
+tmp.meta.srcpos=0;	%   soucre position
+tmp.meta.rcvpos=0;	%   receiver position
+tmp.meta.recnum=0;	% 	record num, id
+tmp.meta.cmp=0;		% 	CMP
+tmp.meta.offset=0;	%  	offet
+tmp.meta.code=zeros(10,1); 	%	input current information
+tmp.meta.npp=0;     %   number of samples per period
+tmp.meta.ncpp=0;    %   ncpp, number of PRBS codes per period          
+tmp.meta.rcvsn=0;	%   receiver meter sn
+tmp.meta.rcvch=0;	%   receiver meter channel 
+tmp.meta.fs=16000;	%   sampling rate
+tmp.meta.num=1;     %   number of frequencies
+
+tmp.para.srcsn=1351;	%   source meter sn
+tmp.para.srcch=2;       %   source meter channel 
+tmp.para.length=16000;      % 	length of EIR
+tmp.para.method='wiener';	% wiener filter
+tmp.para.stack='prestack';	% deconvolution first
+tmp.para.start=0;			% no skip
+tmp.para.step=2;				% number of cycles per deconvolution
+tmp.para.number=10;			% maximum times of deconvolution
+tmp.para.notcher=true;          % nocher on
+tmp.para.nfres=50;      % nocher harmonics
+tmp.para.wienernoise=0.001;     % wiener filtering stationary noise
+tmp.para.invflevel=0.001;       % inverse filter water level
+tmp.para.invflength=10^10;         % a large number, no truncation
+tmp.para.invfmethod='plus';     % setting inverse filtering water level method
+tmp.para.invfgauss=false;       % gauss filtering off
+tmp.para.invfgausslamda=0.5;         % numerical cut-off frequency is 0.25
+tmp.para.notcherwidth=1.02;         % the notcher width
+imp=tmp;
