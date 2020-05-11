@@ -12,11 +12,12 @@ function [ls,w]=esd(x,fs,varargin)
 %                    'Nyquist', symmetric at both sides of Nyquist freqency
 %          Xscale,   linear           x axis scale
 %          Yscale,   log              y axis scale
-%            xlim*fs,   band width or time duration
+%            BandWidth*fs,   band width or time duration
 %          Figure,   'ls', only Linear Spectrum dislayed
 %                    'time', only the time domain signal itself
 %                    'both',  them above 
 %                    'none', no figures
+%            Name,    'Input Series',Name of figure
 p=inputParser;
 addRequired(p,'x',@isnumeric);
 addRequired(p,'fs',@(x) isnumeric(x) && isscalar(x));
@@ -26,9 +27,10 @@ addOptional(p,'IsDensity',false,@islogical);
 addOptional(p,'Center','zero',@(x) any(validatestring(x,{'zero','Nyquist'})));
 addOptional(p, 'Xscale', 'linear',@(x) any(validatestring(x,{'linear','log'})));
 addOptional(p,'Yscale','log',@(x) any(validatestring(x,{'linear','log'})));
-addOptional(p,'xlim',[0,0.5],@(x) isnumeric(x) && numel(x)==2 && x(1)>=-0.5 ...
+addOptional(p,'BandWidth',[0,0.5],@(x) isnumeric(x) && numel(x)==2 && x(1)>=-0.5 ...
     && x(1)<=0.5 && x(2)>=-0.5 &&x(1)<=0.5 && x(1)<=x(2));
 addOptional(p,'Figure','ls',@(x) any(validatestring(x,{'ls','time','both','none'})));
+addOptional(p,'Name','Input Series');
 parse(p,x,fs,varargin{:});
 
 domain=p.Results.Domain;
@@ -37,9 +39,9 @@ isdensity=p.Results.IsDensity;
 center=p.Results.Center;
 xscale=p.Results.Xscale;
 yscale=p.Results.Yscale;
-xlim=p.Results.xlim;
+BandWidth=p.Results.BandWidth;
 figurekind=p.Results.Figure;
-
+name=p.Results.Name;
 [m,n]=size(x);
 if strcmpi(domain,'T')
     ls=x;
@@ -66,30 +68,35 @@ switch figurekind
     case 'none'
     case 'ls'
         figure;
-        plot(w,abs(ls));
-        set(gca,'xscale',xscale,'yscale',yscale,'xlim',xlim*fs);
-        title('Energy Spectral Density of Input Series');
-        xlabel('Frequency (Hz)');
-        ylabel('Amplitude');
+        plot(w,abs(ls),'linewidth',2);
+        set(gca,'xscale',xscale,'yscale',yscale,'xlim',BandWidth*fs,...
+            'FontName','Times','fontsize',24,'LineWidth',2,'box','off');
+        title(sprintf('%s',name),'fontsize',24);
+        xlabel('Frequency (Hz)','fontsize',24);
+        ylabel('Amplitude','fontsize',24);
+%         set(gca,'xTicklabe',get(gca,'xTicklabel'),'fontweight','bold')
     case 'time'
         figure;
-        plot(time_vector(x(:,1)),x);
-        title('Input Series');
-        xlabel('Time (s)');
-        ylabel('Amplitude');
+        plot(time_vector(x(:,1)),x,'linewidth',2);
+        title(sprintf('%s',name),'fontsize',14);
+        xlabel('Time (s)','fontsize',14);
+        ylabel('Amplitude','fontsize',14);
+        set(gca,'xTicklabe',get(gca,'xTicklabel'),'fontweight','bold')
     case 'both'
         figure;
         subplot(2,1,1);
-            plot(time_vector(x(:,1)),x);
-            title('Input Series');
-            xlabel('Time (s)');
-            ylabel('Amplitude');
+            plot(time_vector(x(:,1)),x,'linewidth',2);
+            title(sprintf('%s',name),'fontsize',14);
+            xlabel('Time (s)','fontsize',14);
+            ylabel('Amplitude','fontsize',14);
+             set(gca,'xTicklabe',get(gca,'xTicklabel'),'fontweight','bold')
         subplot(2,1,2);
-             plot(w,abs(ls));
-        set(gca,'xscale',xscale,'yscale',yscale,'xlim',xlim*fs);
-        title('Energy Spectral Density of Input Series');
-        xlabel('Frequency (Hz)');
-        ylabel('Amplitude');
+             plot(w,abs(ls),'linewidth',2);
+        set(gca,'xscale',xscale,'yscale',yscale,'BandWidth',BandWidth*fs);
+         title(sprintf('Power Spectral Density of %s',name),'fontsize',14);
+        xlabel('Frequency (Hz)','fontsize',14);
+        ylabel('Amplitude','fontsize',14);
+         set(gca,'xTicklabe',get(gca,'xTicklabel'),'fontweight','bold')
 end
 
 
@@ -97,35 +104,35 @@ end
 
 
 % -------------------------------------------------obscured----------------------------
-% % function [mx,f]=esd(x,fs,xlim*fs,varargin)
+% % function [mx,f]=esd(x,fs,BandWidth*fs,varargin)
 % % author: Ainray
 % % date: 20151228
 % % 
 % % introduction: 
-% %             : [ls,f]=esd(x,fs,xlim*fs), calculating PSD.
-% %             : [ls,f]=esd(x,fs,xlim*fs,2), the same as above but simutaneously 
+% %             : [ls,f]=esd(x,fs,BandWidth*fs), calculating PSD.
+% %             : [ls,f]=esd(x,fs,BandWidth*fs,2), the same as above but simutaneously 
 % %             :          painting origianl time series
-% %             : [ls,f]=esd(x,f,xlim*fs,4), only calculating PSD without picture
-% %             : [ls,f]=esd(x,f,xlim*fs,0), only painting original time series, 
+% %             : [ls,f]=esd(x,f,BandWidth*fs,4), only calculating PSD without picture
+% %             : [ls,f]=esd(x,f,BandWidth*fs,0), only painting original time series, 
 % %             :          the last parameter can any number but 1,2,4.
-% %             : [ls,f]=esd(x,f,xlim*fs,1,fftsize), specifying the size for DFT,
+% %             : [ls,f]=esd(x,f,BandWidth*fs,1,fftsize), specifying the size for DFT,
 % %             :          if fftsize is more large than the length of input 
 % %             :          time series, padding zeros.
-% %             : [ls,f]=esd(x,f,xlim*fs,1,fftsize,1/0), if true, the DFT result is 
+% %             : [ls,f]=esd(x,f,BandWidth*fs,1,fftsize,1/0), if true, the DFT result is 
 % %             :          normalized by the length of original time series
-% %             : [ls,f]=esd(x,f,xlim*fs,fftsize,1/0,[1/0 1/0]), if true, the 
+% %             : [ls,f]=esd(x,f,BandWidth*fs,fftsize,1/0,[1/0 1/0]), if true, the 
 % %             :          scale is logrithmic
-% %             : [ls,f]=esd(x,f,xlim*fs,fftsize,1/0,[1/0 1/0],'b'), the last parameter
+% %             : [ls,f]=esd(x,f,BandWidth*fs,fftsize,1/0,[1/0 1/0],'b'), the last parameter
 % %             :          control the line color
 % % input:
 % %           x, time series
 % %          fs, sampling freqency
-% %        xlim*fs, the frequency band width
+% %        BandWidth*fs, the frequency band width
 % %    varargin, the control parameters, in order
 % % output: 
 % %          mx, the Power Spectral Density of x
 % %           f, the frequency sampling points  
-% function [ls,f]=esd(x,fs,xlim*fs,varargin)
+% function [ls,f]=esd(x,fs,BandWidth*fs,varargin)
 % std=size(varargin,2);  % control parameter number
 % switch std
 %     case 0   
@@ -214,14 +221,14 @@ end
 %     title('Input Series');
 %     xlabel('Time (s)');
 %     ylabel('Amplitude');
-%     set(gca,'xlim*fs',xlim*fs);
+%     set(gca,'BandWidth*fs',BandWidth*fs);
 %     return;
 % end
 % if fr==2     % both time and freq domain
 %     subplot(2,1,2);
 % end
 % plot(f,mx,clr);
-% set(gca,'xscale',xscale,'yscale',yscale,'xlim*fs',xlim*fs);
+% set(gca,'xscale',xscale,'yscale',yscale,'BandWidth*fs',BandWidth*fs);
 % title('Energy Spectral Density of Input Series');
 % xlabel('Frequency (Hz)');
 % ylabel('Energy Distribution');
@@ -232,5 +239,5 @@ end
 % title('Input Series');
 % xlabel('Time (s)');
 % ylabel('Amplitude');
-% set(gca,'xlim*fs',[0,t_s(min(length(t_s),fs))]);
+% set(gca,'BandWidth*fs',[0,t_s(min(length(t_s),fs))]);
 % end

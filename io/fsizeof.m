@@ -9,4 +9,11 @@
 %            bytes, the number of bytes of 'filename'
 function bytes=fsizeof(filename)
 d=dir(filename);
+
+% ---- 20190917
+if(isempty(d))
+    error([filename, ' does not exist']);
+end
+% -------
+
 bytes=d.bytes;

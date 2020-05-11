@@ -1,4 +1,4 @@
-function [y]=fconv(x, h,N)
+function [y]=fconv(x,h,N)
 %FCONV Fast Convolution
 %   [y] = FCONV(x, h) convolves x and h, and normalizes the output  
 %         to +-1.
@@ -17,7 +17,7 @@ function [y]=fconv(x, h,N)
 %Version 1.0
 %Coded by: Stephen G. McGovern, 2003-2004.
 
-Ly=length(x)+length(h)-1;  % 
+Ly=length(x)+length(h)-1;  % in this case,linear convolution equal to circular convolution
 if nargin<3      %add by Ainray, 20160319
     N=Ly;
 end
@@ -29,5 +29,5 @@ X=fft(x, Ly2);              % Fast Fourier transform
 H=fft(h, Ly2);	           % Fast Fourier transform
 Y=X.*H;        	           % 
 y=real(ifft(Y, Ly2));      % Inverse fast Fourier transform
-y=y(1:1:min(N,Ly));               % Take just the first N elements
+y=y(1:1:min(N,Ly),:);               % Take just the first N elements
 % y=y/max(abs(y));           % Normalize the output

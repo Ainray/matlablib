@@ -7,18 +7,23 @@
 %           m, the line data, one colum per line  
 %           (optional parameter-value pairs)
 %
-%           'SamplingRate',1    sampling rate 
-%           'Ratio',1           scaling lines
-%           'Length',1600       number of points per line
-%           'Start',1           starting index of all lines 
-%           'XScale','linear'   linear ('linear') or logarithmic('log') scaling for x axis  
-%           'YScale','linear'   linear ('linear') or logarithmic('log') scaling for x axis       
-%           'Removedc' ture,    remove dc or not
-%           'IsErr', false      plot error bar or not, now no impletmentation
+%           'SamplingRate',1     sampling rate 
+%           'Ratio',1            scaling lines
+%           'Length',1600        number of points per line
+%           'Start',1            starting index of all lines 
+%           'XScale','linear'    linear ('linear') or logarithmic('log') scaling for x axis  
+%           'YScale','linear'    linear ('linear') or logarithmic('log') scaling for x axis       
+%           'Removedc' true,     remove dc or not
+%           'IsErr', false       plot error bar or not, now no impletmentation
+%           'NormalXscale',false normal x abscissa
+%           'Dual', true        dual y axes or not, when only one column, it make no sense
 %     output:
-%           (none)
+%           [ax,h1,h2]=only useful for 'Dual' mode
 
-function plotstart(m,varargin)
+function [ax,h1,h2]=plotstart(m,varargin)
+   ax=[];
+   h1=[];
+   h2=[];
    p = inputParser;
    defaultfs = 1;   % default sampling rate
    defaultratio=1;  % default sclaing ratio (scale or array)
@@ -41,28 +46,47 @@ function plotstart(m,varargin)
                  @(x) any(validatestring(x,expectedscale)));
    addOptional(p, 'Removedc',false,@islogical);
    addOptional(p,'IsErr',false, @islogical);
+   addOptional(p,'NormalXscale',false,@islogical);
+   addOptional(p,'Dual',false);
    parse(p,m,varargin{:});
    fs=p.Results.SamplingRate; 
    ratio=p.Results.Ratio;
    N=p.Results.Length;
    start_=p.Results.Start;
    isrmdc=p.Results.Removedc;
+   isnormalxscale=p.Results.NormalXscale;
+   isdual=p.Results.Dual;
    clr=['-r','-b','-c','-m','-y','-g','+r','og','*b','.c','xm','sy','dr'];
+   if isempty(m)
+       return;
+   end
    if length(ratio)<size(m,2)
        ratio(length(ratio):size(m,2))=ratio(1);
    end
    if isrmdc 
-       avg=ones(size(m,1),1)*mean(m);
-       m=m-avg;
+%        avg=ones(size(m,1),1)*mean(m);
+%        m=m-avg;
+        m=removedc(m,[1,N,10^15]);
+   end
+   if isnormalxscale
+       x=[1:min(N,length(m(:,1))-start_+1)]'/fs;
+   else
+       x=[start_:start_+min(N,length(m(:,1))-start_+1)-1]'/fs;
+   end
+   if isdual && size(m,2)>1
+      [ax,h1,h2]= plotyy(x,m(start_:start_+min(N,length(m(:,1))-start_+1)-1,1),...
+       x,m(start_:start_+min(N,length(m(:,1))-start_+1)-1,2));
+       return
    end
    if p.Results.IsErr
        subplot(2,1,2);
-       plot([start_:start_+min(N,length(m(:,1)))-1]/fs,abs((m(start_:start_+min(N,length(m(:,1)))-1,2)-...
-           m(start_:start_+min(N,length(m(:,1)))-1,1))./m(start_:start_+min(N,length(m(:,1)))-1,1))*100);
+       plot(x,abs((m(start_:start_+min(N,length(m(:,1))-start_+1)-1,2)-...
+           m(start_:start_+min(N,length(m(:,1))-start_+1)-1,1))./...
+           m(start_:start_+min(N,length(m(:,1))-start_+1)-1,1))*100);
        subplot(2,1,1);
    end
    for j=1:size(m,2)
-        plot([start_:start_+min(N,length(m(:,j)))-1]/fs,m(start_:start_+min(N,length(m(:,j)))-1,j)...
+      plot(x,m(start_:start_+min(N,length(m(:,1))-start_+1)-1,j)...
             *ratio(j),clr((j-1)*2+1:j*2),'linewidth',1,'MarkerSize',2.5);
 %                , 'linewidth',1,'MarkerSize',2.5);
         hold on;

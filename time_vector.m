@@ -8,7 +8,7 @@
 % input:
 %       x, the data
 %      fs, the sampling frequency, the default value is 1.
-%   start, the time start point
+%   start, the time start time
 function t_v=time_vector(x,fs,start)
 if nargin<2
     fs=1;

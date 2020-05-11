@@ -26,12 +26,14 @@ addOptional(p,'BandWidth',[0,0.5], @(x) isvector(x) && numel(x)==2  && x(1)>=0 &
     && x(2)>=0 && x(2)<=0.5 && x(1)<x(2));
 addOptional(p,'B',[],@(x) iscell(x));
 addOptional(p,'A',[],@(x) iscell(x));
+addOptional(p,'sidelv',false,@(x) islogical(x));
 parse(p,impulse,varargin{:});
 
 fs=p.Results.Fs;
 bw=p.Results.BandWidth;
 B=p.Results.B;
 A=p.Results.A;
+sidelv=p.Results.sidelv;
 if isempty(impulse) && (isempty(A) || isempty(B))
     error('empty input');
 end
@@ -49,6 +51,13 @@ for i=1:numel(B)
 end
 if m==1 && n>0 % row vector
     impulse=impulse';   
+end
+if fs==1
+    xlbl='Sample number';
+    fxlbl='Frequency';
+else
+    xlbl='Time (s)';
+    fxlbl='Frequency (Hz)';
 end
 [m,n]=size(impulse);
 % len=length(impulse);
@@ -77,11 +86,11 @@ for i=1:n  % column-by-column
     amp(:,i)=amp(:,i)/max(amp(:,i)); 
 %     ph(:,i)=v2col(phasecalc(fre(1:fftsize/2+1)));
     % side-lobe attenuation relative main lobe
-    maxmins{i}=peak(amp(:,i));
+    maxmins{i}=mtem_peak(amp(:,i));
     tmp=maxmins{i};
     if length(tmp)>2
-        [sl(1,i),id]=max(amp(tmp(2:end)));
-        sl(1,i)=20*log10(sl(1,i)/amp(1));
+        [sl(1,i),id]=max(amp(tmp(2:end),i));
+        sl(1,i)=20*log10(sl(1,i)/amp(1,i));
         sl(2,i)=tmp(id);
     end
 end
@@ -92,7 +101,7 @@ subplot(2,2,1);plot(t_s,impulse,'LineWidth',2);
 hold on;
 %plot([0:len-1],[impulse],'.'); 
 set(gca,'xLim',[t_s(1),t_s(end)]);grid on;
-xlabel('Sample number');ylabel('Amplitude');
+xlabel(xlbl);ylabel('Amplitude');
 title('a. Filter kernel'); 
 % if ~isempty(varargin)
 %     hl=legend(varargin{:},'Orientation','horizontal');legend('boxoff');
@@ -105,18 +114,18 @@ subplot(2,2,3);plot(t_s,step,'LineWidth',2);
 % hold on;%plot([0:len-1],step,'.');
 set(gca,'xLim',[t_s(1),t_s(end)]);%,'yLim',[0,1.001],'yTick',[0:0.1:1]
 grid on;
-xlabel('Sample number');ylabel('Amplitude');
+xlabel(xlbl);ylabel('Amplitude');
 title('b. Step response');%legend(varargin{:});
 %set(gca,'ytick',[-0.2:0.2:1.2],'yticklabel',num2cell([-0.2:0.2:1.2]));
 
 subplot(2,2,2);plot(time_vector(amp(:,1),fftsize/fs),amp,'LineWidth',2);
-xlabel('Frequency');ylabel('Amplitude');
+xlabel(fxlbl);ylabel('Amplitude');
 grid on; 
 % %20160308
 % subplot(2,2,2);
 % [AX,H1,H2]=plotyy(time_vector(amp(:,1),fftsize/fs),amp,...
 %     time_vector(amp(:,1),fftsize/fs),ph);
-% set(get(AX(1),'xLabel'),'String','Frequency'...
+% set(get(AX(1),'xLabel'),'String',fxlbl...
 %     ,'FontName','Helvetica','FontUnits','points','FontSize',10,'Color','k');
 % set(get(AX(1),'yLabel'),'String','Amplitude','FontName','Helvetica','FontUnits'...
 %     ,'points','FontSize',10,'Color','k');
@@ -132,16 +141,21 @@ title('c. Freqency response');%legend(varargin{:});
 %set(gca,'ytick',[-0.2:0.2:1.2],'yticklabel',num2cell([-0.2:0.2:1.2]));
 ts=time_vector(amp(:,1),fftsize/fs);
 subplot(2,2,4);plot(ts,max(-200,20*log10(amp)),'LineWidth',2);
-if length(maxmins{1})>2
-    hold on;
-    plot([0,fs/2],[sl(1,1),sl(1,1)],'--k','LineWidth',1.5);
-    text(ts(max(sl(2,1)-100,1)),sl(1,1)+10,sprintf('%.2fdB',sl(1,1)),'FontSize',15);
-    % tmp=maxmins{1};
-    % % plot(ts(tmp(3:2:end)),20*log10(amp(tmp(3:2:end))),'--r');
-    hold off;
+if sidelv==1 
+    for i=1:n
+        if length(maxmins{i})>2
+        hold on;
+        plot([0,fs/2],[sl(1,i),sl(1,i)],'--k','LineWidth',1.5);
+        text(ts(max(sl(2,i)-100,1)),sl(1,i)+10,sprintf('%.2fdB',sl(1,i)),'FontSize',15);
+        text(ts(max(sl(2,i)-100,1)),sl(1,i)+10,sprintf('%.2fdB',sl(1,i)),'FontSize',15);
+        % tmp=maxmins{1};
+        % % plot(ts(tmp(3:2:end)),20*log10(amp(tmp(3:2:end))),'--r');
+        hold off;
+        end
+    end
 end
 set(gca,'xLim',bw*fs,'yLim',[-200,0],'yTick',[-200:20:0]);
-xlabel('Frequency');ylabel('Amplitude(dB)');%set(gca,'xLim',[0,0.5]);
+xlabel(fxlbl);ylabel('Amplitude(dB)');%set(gca,'xLim',[0,0.5]);
 grid on;%legend(varargin{:});
 title('d. Freqency response(dB)');
 
@@ -153,7 +167,7 @@ title('d. Freqency response(dB)');
 %     
 % %plot([0:len-1],[impulse],'.');
 % set(gca,'xLim',[t_s(1),t_s(end)]);grid on;
-% xlabel('Sample number');ylabel('Amplitude');
+% xlabel(xlbl);ylabel('Amplitude');
 % title('a. Filter kernel');
 % 
 % t_s=time_vector(step(:,i),fs);
@@ -161,12 +175,12 @@ title('d. Freqency response(dB)');
 % % hold on;%plot([0:len-1],step,'.');
 % set(gca,'xLim',[t_s(1),t_s(end)]);
 % hold on;grid on;
-% xlabel('Sample number');ylabel('Amplitude');
+% xlabel(xlbl);ylabel('Amplitude');
 % title('b. Step response');
 % %set(gca,'ytick',[-0.2:0.2:1.2],'yticklabel',num2cell([-0.2:0.2:1.2]));
 % 
 % subplot(2,2,2);plot(time_vector(amp(:,i),fftsize/fs),amp(:,i),'k','LineWidth',2);
-% xlabel('Frequency');ylabel('Amplitude');
+% xlabel(fxlbl);ylabel('Amplitude');
 % grid on;
 % hold on;
 % 
@@ -176,7 +190,7 @@ title('d. Freqency response(dB)');
 % 
 % subplot(2,2,4);plot(time_vector(amp(:,i),fftsize/fs),20*log10(amp(:,i)),'k','LineWidth',2);
 % % hold on;
-% xlabel('Frequency');ylabel('Amplitude(dB)');%set(gca,'xLim',[0,0.5]);
+% xlabel(fxlbl);ylabel('Amplitude(dB)');%set(gca,'xLim',[0,0.5]);
 % grid on;
 % hold on;
 % title('d. Freqency response(dB)');

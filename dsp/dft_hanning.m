@@ -1,4 +1,4 @@
-% function [w]=dft_hanning(N,mode)
+% function 2=winhanning(N,mode)
 % author: Ainray
 % date: v1,20160308
 % version: 1.0
@@ -6,8 +6,8 @@
 % introduction: calculating the hanning(or called raised cosine) window
 %               w=1/2+1/2cos(2*pi/N*[-N/2:N/2]), for symmetric mode
 %               Examples:
-%                 w=dft_hanning(10), return 11 samples of sysmmtric window
-%                 w=dft_hanning(10,'one-side'), return 10 samples window,
+%                 w=winhanning(10), return 11 samples of sysmmtric window
+%                 w=winhanning(10,'one-side'), return 10 samples window,
 %               with the left zero but without right
 % input:
 %         N, the number of samples
@@ -16,7 +16,7 @@
 %            'one-side',  return N samples, only the left zero is guaranted.
 % output:
 %         w, the window 
-function [w]=dft_hanning(N,mode)
+function [w]=winhanning(N,mode)
 if nargin<2
     mode='symmetric';
 end

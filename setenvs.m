@@ -5,7 +5,7 @@
  
  % set font
  
- set(0,'DefaultAxesFontSize',14)
+ set(0,'DefaultAxesFontSize',10)
  
  % set line 
  set(0,'defaultLineLineWidth',2);

@@ -30,7 +30,7 @@ end
 
 % --------modified on 20160220----------
 if nargin<5
-    figyn='n';
+    figyn='y';
 end
 if nargin<6
     quiet=false;
