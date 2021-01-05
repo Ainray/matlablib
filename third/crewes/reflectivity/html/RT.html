@@ -1,0 +1,382 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>RT</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-06-07"><meta name="DC.source" content="RT.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="keyword">function</span> [Rd,Td,Ru,Tu] = RT(i1,i2,a,b,rho,S2Velocity,uuC,uC2,uC)
+</pre><pre class="codeinput"><span class="comment">% computation of reflection and transmission coefficients for</span>
+<span class="comment">%   elastic propagation for a solid-solid boundary.</span>
+<span class="comment">%   Wave incident from layer above (Muller table 1) and from below (table 2).</span>
+<span class="comment">%</span>
+<span class="comment">% i1 ... index of upper layer</span>
+<span class="comment">% i2 ... index of lower layer</span>
+<span class="comment">% a ... vertical p slowness (vector)</span>
+<span class="comment">% b ... vertical s slowness (vector)</span>
+<span class="comment">% rho ... density (vector)</span>
+<span class="comment">% S2Velocity ... shear velocity squared (complex) (vector)</span>
+<span class="comment">% uuC ... complex horizontal slowness squared (scalar)</span>
+<span class="comment">% uC2 ... 2 times uC (scalar)</span>
+<span class="comment">% uC ... complex horizontal slowness (scalar)</span>
+<span class="comment">%</span>
+<span class="comment">% Rd ... reflection matrix for downgoing (2x2 complex)</span>
+<span class="comment">% Td ... transmission matrix for downgoing (2x2 complex)</span>
+<span class="comment">% Ru ... reflection matrix for upgoing (2x2 complex)</span>
+<span class="comment">% Tu ... transmission matrix for upgoing (2x2 complex)</span>
+<span class="comment">%</span>
+<span class="comment">% NOTE: This SOFTWARE may be used by any individual or corporation for any purpose</span>
+<span class="comment">% with the exception of re-selling or re-distributing the SOFTWARE.</span>
+<span class="comment">% By using this software, you are agreeing to the terms detailed in this software's</span>
+<span class="comment">% Matlab source file.</span>
+
+<span class="comment">% BEGIN TERMS OF USE LICENSE</span>
+<span class="comment">%</span>
+<span class="comment">% This SOFTWARE is maintained by the CREWES Project at the Department</span>
+<span class="comment">% of Geology and Geophysics of the University of Calgary, Calgary,</span>
+<span class="comment">% Alberta, Canada.  The copyright and ownership is jointly held by</span>
+<span class="comment">% its 'AUTHOR' (identified above) and the CREWES Project.  The CREWES</span>
+<span class="comment">% project may be contacted via email at:  crewesinfo@crewes.org</span>
+<span class="comment">%</span>
+<span class="comment">% The term 'SOFTWARE' refers to the Matlab source code, translations to</span>
+<span class="comment">% any other computer language, or object code</span>
+<span class="comment">%</span>
+<span class="comment">% Terms of use of this SOFTWARE</span>
+<span class="comment">%</span>
+<span class="comment">% 1) This SOFTWARE may be used by any individual or corporation for any purpose</span>
+<span class="comment">%    with the exception of re-selling or re-distributing the SOFTWARE.</span>
+<span class="comment">%</span>
+<span class="comment">% 2) The AUTHOR and CREWES must be acknowledged in any resulting publications or</span>
+<span class="comment">%    presentations</span>
+<span class="comment">%</span>
+<span class="comment">% 3) This SOFTWARE is provided "as is" with no warranty of any kind</span>
+<span class="comment">%    either expressed or implied. CREWES makes no warranties or representation</span>
+<span class="comment">%    as to its accuracy, completeness, or fitness for any purpose. CREWES</span>
+<span class="comment">%    is under no obligation to provide support of any kind for this SOFTWARE.</span>
+<span class="comment">%</span>
+<span class="comment">% 4) CREWES periodically adds, changes, improves or updates this SOFTWARE without</span>
+<span class="comment">%    notice. New versions will be made available at www.crewes.org .</span>
+<span class="comment">%</span>
+<span class="comment">% 5) Use this SOFTWARE at your own risk.</span>
+<span class="comment">%</span>
+<span class="comment">% END TERMS OF USE LICENSE</span>
+
+<span class="comment">%   Muller (1985), Table 1 and 2.</span>
+
+<span class="comment">% some useful variables</span>
+rho1rho2 = rho(i1) * rho(i2);
+</pre><pre class="codeoutput error">Not enough input arguments.
+
+Error in RT (line 60)
+rho1rho2 = rho(i1) * rho(i2);
+</pre><p><img src="RT_eq15552604986686228311.png" alt="$$\rho_1\rho_2$$"></p><p>c is twice the difference in rigidity</p><pre class="codeinput">c = 2 * ( rho(i1) *  S2Velocity(i1) - rho(i2) *  S2Velocity(i2));
+cuu = c * uuC;
+
+<span class="comment">% auxiliary quantities (occur repeatedly)</span>
+aux1 = cuu - (rho(i1) - rho(i2));
+aux2 = cuu + rho(i2);
+<span class="comment">%aux1aux2 = aux1 * aux2;</span>
+aux3 = cuu - rho(i1);
+caux3 = c * aux3;
+caux2 = c * aux2;
+
+<span class="comment">%vertical slowness related variables</span>
+a1 = a(i1);
+b1 = b(i1);
+a2 = a(i2);
+b2 = b(i2);
+a1b1 = a1 * b1;
+a1b2 = a1 * b2;
+a2b1 = a2 * b1;
+a2b2 = a2 * b2;
+a1a2b1b2 = a1b1 * a2b2;
+
+<span class="comment">% computing D factors from Table 1 and 2(Muller, 1985)</span>
+<span class="comment">% down-going propagasion</span>
+auxm1 = a2b2 * aux3 * aux3;
+auxm2 = aux1 * aux1 * uuC;
+d1d = auxm1 + auxm2 + a2b1 * rho1rho2;  <span class="comment">% d^d_1</span>
+
+auxm1 = a1b1 * aux2 * aux2;
+auxm2 = a1a2b1b2 * c * cuu;
+d2d = auxm1 + auxm2 + a1b2 * rho1rho2;  <span class="comment">% d^d_2</span>
+
+<span class="comment">% up-going propagation</span>
+auxm1 = a1b1 * aux2 * aux2;
+auxm2 = aux1 * aux1 * uuC;
+d1u = a1b2 * rho1rho2 + auxm1 + auxm2;<span class="comment">%d^u_1</span>
+
+auxm1 = a1a2b1b2 * c * cuu;
+auxm2 = a2b2 * aux3 * aux3;
+d2u = a2b1 * rho1rho2 + auxm1 + auxm2;
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">%downgoing (incident, Y. Ma, Oct. 2004) waves (Muller(1985), Table 1)</span>
+<span class="comment">% computing some related variables</span>
+dd = d1d + d2d;    <span class="comment">% (d^d_1 + d^d_2)</span>
+<span class="comment">% dpda = a1 * dd;</span>
+<span class="comment">% dpdb = b1 * dd;</span>
+ddm = d2d - d1d;
+<span class="comment">%aux4 = aux1 * aux3 + caux2 * a2b2 / dd;   % Maybe a type-error in the orginal</span>
+<span class="comment">%codes (Y. Ma, Oct. 2004). Corrected as the followinf line:</span>
+aux4 = (aux1 * aux2 + caux3 * a2b2) / dd; <span class="comment">% see Muller (1985) Table 1, formula 2 &amp; 6</span>
+rho1_2 = rho(i1) * 2 / dd;
+
+<span class="comment">% computing the reflection coefficients</span>
+Rd(1,1) = ddm / dd;                                   <span class="comment">% Rpp</span>
+Rd(1,2) = (uC2 * b1) * aux4;                          <span class="comment">% Rsp</span>
+Rd(2,1) = - (uC2 * a1) * aux4;                        <span class="comment">% Rps</span>
+Rd(2,2) = (ddm - 2 * rho1rho2 * (a1b2 - a2b1)) / dd;  <span class="comment">% Rss</span>
+
+<span class="comment">% computing the transmision coefficients</span>
+Td(1,1) = rho1_2 * a1 * (aux2 * b1 - aux3 * b2);      <span class="comment">% Tpp</span>
+Td(1,2) = rho1_2 * b1 * uC *(aux1 + c * a1b2);        <span class="comment">% Tsp</span>
+Td(2,1) = - rho1_2 * a1 * uC* (aux1 + c * a2b1);      <span class="comment">% Tps</span>
+Td(2,2) = rho1_2 * b1 * (aux2 * a1 - aux3 * a2);      <span class="comment">% Tss</span>
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">%downgoing waves (Muller(1985), Table 2)</span>
+<span class="comment">%Upgoing incident (Y. Ma, Oct. 2004)</span>
+<span class="comment">% computing some related variables</span>
+<span class="comment">%disp('entering RT');</span>
+dd = d1u + d2u;    <span class="comment">% (d^d_1 + d^d_2)</span>
+<span class="comment">% dpda = a1 * dd;</span>
+<span class="comment">% dpdb = b1 * dd;</span>
+ddm = d2u - d1u;
+<span class="comment">%aux4 = aux1 * aux2 + caux3 * a1b1 / dd;  % Maybe a type-error in the orginal</span>
+<span class="comment">%codes (Y. Ma, Oct. 2004). Corrected as the followinf line:</span>
+aux4 = (aux1 * aux3 + caux2 * a1b1) / dd;
+rho2_2 = rho(i2) * 2 / dd;
+
+<span class="comment">% computing the reflection coefficients</span>
+Ru(1,1) = ddm / dd;                                   <span class="comment">% Rpp</span>
+Ru(1,2) = - (uC2 * b2) * aux4;                        <span class="comment">% Rsp</span>
+Ru(2,1) = (uC2 * a2) * aux4;                          <span class="comment">% Rps</span>
+Ru(2,2) = (ddm - 2 * rho1rho2 * (a2b1 - a1b2)) / dd;  <span class="comment">% Rss</span>
+
+<span class="comment">% computing the transmision coefficients</span>
+Tu(1,1) = rho2_2 * a2 * (aux2 * b1 - aux3 * b2);      <span class="comment">% Tpp</span>
+Tu(1,2) = rho2_2 * b2 * uC * (aux1 + c * a2b1);       <span class="comment">% Tsp</span>
+Tu(2,1) = - rho2_2 * a2 * uC * (aux1 + c * a1b2);     <span class="comment">% Tps</span>
+Tu(2,2) = rho2_2 * b2 * (aux2 * a1 - aux3 * a2);      <span class="comment">% Tss</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function [Rd,Td,Ru,Tu] = RT(i1,i2,a,b,rho,S2Velocity,uuC,uC2,uC)
+% computation of reflection and transmission coefficients for 
+%   elastic propagation for a solid-solid boundary.
+%   Wave incident from layer above (Muller table 1) and from below (table 2).
+% 
+% i1 ... index of upper layer
+% i2 ... index of lower layer
+% a ... vertical p slowness (vector)
+% b ... vertical s slowness (vector)
+% rho ... density (vector)
+% S2Velocity ... shear velocity squared (complex) (vector)
+% uuC ... complex horizontal slowness squared (scalar)
+% uC2 ... 2 times uC (scalar)
+% uC ... complex horizontal slowness (scalar)
+%
+% Rd ... reflection matrix for downgoing (2x2 complex)
+% Td ... transmission matrix for downgoing (2x2 complex)
+% Ru ... reflection matrix for upgoing (2x2 complex)
+% Tu ... transmission matrix for upgoing (2x2 complex)
+%
+% NOTE: This SOFTWARE may be used by any individual or corporation for any purpose
+% with the exception of re-selling or re-distributing the SOFTWARE.
+% By using this software, you are agreeing to the terms detailed in this software's
+% Matlab source file.
+
+% BEGIN TERMS OF USE LICENSE
+%
+% This SOFTWARE is maintained by the CREWES Project at the Department
+% of Geology and Geophysics of the University of Calgary, Calgary,
+% Alberta, Canada.  The copyright and ownership is jointly held by
+% its 'AUTHOR' (identified above) and the CREWES Project.  The CREWES
+% project may be contacted via email at:  crewesinfo@crewes.org
+%
+% The term 'SOFTWARE' refers to the Matlab source code, translations to
+% any other computer language, or object code
+%
+% Terms of use of this SOFTWARE
+%
+% 1) This SOFTWARE may be used by any individual or corporation for any purpose
+%    with the exception of re-selling or re-distributing the SOFTWARE.
+%
+% 2) The AUTHOR and CREWES must be acknowledged in any resulting publications or
+%    presentations
+%
+% 3) This SOFTWARE is provided "as is" with no warranty of any kind
+%    either expressed or implied. CREWES makes no warranties or representation
+%    as to its accuracy, completeness, or fitness for any purpose. CREWES
+%    is under no obligation to provide support of any kind for this SOFTWARE.
+%
+% 4) CREWES periodically adds, changes, improves or updates this SOFTWARE without
+%    notice. New versions will be made available at www.crewes.org .
+%
+% 5) Use this SOFTWARE at your own risk.
+%
+% END TERMS OF USE LICENSE
+
+%   Muller (1985), Table 1 and 2.
+
+% some useful variables
+rho1rho2 = rho(i1) * rho(i2);
+%%
+% 
+% $$\rho_1\rho_2$$
+% 
+% c is twice the difference in rigidity
+c = 2 * ( rho(i1) *  S2Velocity(i1) - rho(i2) *  S2Velocity(i2));
+cuu = c * uuC;
+
+% auxiliary quantities (occur repeatedly)
+aux1 = cuu - (rho(i1) - rho(i2));
+aux2 = cuu + rho(i2);   
+%aux1aux2 = aux1 * aux2;
+aux3 = cuu - rho(i1);
+caux3 = c * aux3;
+caux2 = c * aux2;
+
+%vertical slowness related variables
+a1 = a(i1);
+b1 = b(i1);
+a2 = a(i2);
+b2 = b(i2);
+a1b1 = a1 * b1;
+a1b2 = a1 * b2;
+a2b1 = a2 * b1;
+a2b2 = a2 * b2;
+a1a2b1b2 = a1b1 * a2b2;
+
+% computing D factors from Table 1 and 2(Muller, 1985)
+% down-going propagasion
+auxm1 = a2b2 * aux3 * aux3;
+auxm2 = aux1 * aux1 * uuC;
+d1d = auxm1 + auxm2 + a2b1 * rho1rho2;  % d^d_1
+
+auxm1 = a1b1 * aux2 * aux2;
+auxm2 = a1a2b1b2 * c * cuu;
+d2d = auxm1 + auxm2 + a1b2 * rho1rho2;  % d^d_2
+
+% up-going propagation
+auxm1 = a1b1 * aux2 * aux2;
+auxm2 = aux1 * aux1 * uuC;
+d1u = a1b2 * rho1rho2 + auxm1 + auxm2;%d^u_1
+
+auxm1 = a1a2b1b2 * c * cuu;
+auxm2 = a2b2 * aux3 * aux3;
+d2u = a2b1 * rho1rho2 + auxm1 + auxm2;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%downgoing (incident, Y. Ma, Oct. 2004) waves (Muller(1985), Table 1)
+% computing some related variables
+dd = d1d + d2d;    % (d^d_1 + d^d_2)
+% dpda = a1 * dd;
+% dpdb = b1 * dd;
+ddm = d2d - d1d;
+%aux4 = aux1 * aux3 + caux2 * a2b2 / dd;   % Maybe a type-error in the orginal
+%codes (Y. Ma, Oct. 2004). Corrected as the followinf line:
+aux4 = (aux1 * aux2 + caux3 * a2b2) / dd; % see Muller (1985) Table 1, formula 2 & 6 
+rho1_2 = rho(i1) * 2 / dd;
+
+% computing the reflection coefficients 
+Rd(1,1) = ddm / dd;                                   % Rpp
+Rd(1,2) = (uC2 * b1) * aux4;                          % Rsp
+Rd(2,1) = - (uC2 * a1) * aux4;                        % Rps
+Rd(2,2) = (ddm - 2 * rho1rho2 * (a1b2 - a2b1)) / dd;  % Rss
+
+% computing the transmision coefficients
+Td(1,1) = rho1_2 * a1 * (aux2 * b1 - aux3 * b2);      % Tpp
+Td(1,2) = rho1_2 * b1 * uC *(aux1 + c * a1b2);        % Tsp
+Td(2,1) = - rho1_2 * a1 * uC* (aux1 + c * a2b1);      % Tps
+Td(2,2) = rho1_2 * b1 * (aux2 * a1 - aux3 * a2);      % Tss
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%downgoing waves (Muller(1985), Table 2)
+%Upgoing incident (Y. Ma, Oct. 2004)
+% computing some related variables
+%disp('entering RT');
+dd = d1u + d2u;    % (d^d_1 + d^d_2)
+% dpda = a1 * dd;
+% dpdb = b1 * dd;
+ddm = d2u - d1u;
+%aux4 = aux1 * aux2 + caux3 * a1b1 / dd;  % Maybe a type-error in the orginal
+%codes (Y. Ma, Oct. 2004). Corrected as the followinf line:
+aux4 = (aux1 * aux3 + caux2 * a1b1) / dd;
+rho2_2 = rho(i2) * 2 / dd;
+
+% computing the reflection coefficients
+Ru(1,1) = ddm / dd;                                   % Rpp
+Ru(1,2) = - (uC2 * b2) * aux4;                        % Rsp
+Ru(2,1) = (uC2 * a2) * aux4;                          % Rps
+Ru(2,2) = (ddm - 2 * rho1rho2 * (a2b1 - a1b2)) / dd;  % Rss
+
+% computing the transmision coefficients
+Tu(1,1) = rho2_2 * a2 * (aux2 * b1 - aux3 * b2);      % Tpp
+Tu(1,2) = rho2_2 * b2 * uC * (aux1 + c * a2b1);       % Tsp
+Tu(2,1) = - rho2_2 * a2 * uC * (aux1 + c * a1b2);     % Tps
+Tu(2,2) = rho2_2 * b2 * (aux2 * a1 - aux3 * a2);      % Tss
+##### SOURCE END #####
+--></body></html>

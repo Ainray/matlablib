@@ -22,11 +22,10 @@
 function [s,t_s]=analyticstep(ps,offset,fs,time)
 if nargin<4
     tm=0.1*3.14159265358979*4*1e-7*max(offset)^2/ps; % peak time, tm=mui*offset*offset/ps;
-    tz=20*tm;
-    time=1/fs:1/fs:tz;
+    tz=30*tm;
+    time=(0:1/fs:tz)';
 end
-t_s=time;t_s(1)=eps;
-
+t_s=time;t_s(1)=0;
 nr=length(offset);
 pi=3.14159265358979;
 % g(tao)=tao^(-5/2)*exp(-5/2/tao), where tao is t/t_peak

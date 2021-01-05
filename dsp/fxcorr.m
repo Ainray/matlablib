@@ -17,7 +17,8 @@ function [xc,indx]=fxcorr(x,y,type)
 if nargin<2
     y=x;
 end
-
+x=x(:);
+y=y(:);
 if nargin<3
     type = 1;
 end
@@ -25,7 +26,7 @@ end
 Ly=length(x)+length(y)-1;  %
 Ly2=pow2(nextpow2(Ly));    % Find smallest power of 2 that is > Ly
 
-fre = (0:Ly2-1)'/Ly2;
+% fre = (0:Ly2-1)'/Ly2;
 
 %Ly2 always is greater than Ly=length(x)+length(h)-1, no aliasing occurs
 
