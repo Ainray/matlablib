@@ -10,8 +10,13 @@ Toolkit list
 ------------
 		deconv, deconvolution toolkit.
 		dsp, DSP toolkit
-		export_fig-master, exporting figures toolkit
 		io, input and output toolkit.
+		third libraries:
+		    export_fig-master, exporting figures toolkit
+                    crewes
+                    NMESdata
+                    REGU
+                    SeismicLab
 		
 General function list
 ---------------------
