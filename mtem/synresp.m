@@ -1,4 +1,4 @@
-% function y=synresp(x,h,isstep,n)
+% function [y,t]=synresp(x,h,fs,type,n)
 % author: Ainray
 % date: 20160315
 % modified: 20201216, support both impulse and step 

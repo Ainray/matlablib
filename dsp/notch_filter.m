@@ -1,4 +1,4 @@
-function y=notch_filter(B,A,x,m,w,dual)
+function y=notch_filter(B, A, x, m, w, dual)
 %   date: 20190813
 %   email: wwzhang0421@163.com
 %   lated: 20190813
@@ -20,10 +20,11 @@ function y=notch_filter(B,A,x,m,w,dual)
 if nargin<6
     dual=1; % default is dual direction
 end
-x=v2col(x);
+
+x=x(:);
 n=length(x);
-A=v2col(A);
-B=v2col(B);
+A=A(:);
+B=B(:);
 
 if m>1      % projection filter
     % project operator
@@ -33,35 +34,40 @@ if m>1      % projection filter
     %[0 sin(w1)   ... sin((M-1)w1)]
     % ...
     y=zeros(n,1);
-    nw=length(w);
-    nw2=nw*2;
-    if m<nw2
-        m=nw2;
-    end
-    if(m<length(A)-1)
-        m=length(A)-1;
-    end
+    nw=length(w);   % hormonics
+    nw2=nw*2;       % sin and cos
+%     if m<nw2        % at least twice of number of hormonics
+%         m=nw2;
+%     end
+%     if(m<length(A)-1)   % at least number of coefficients -1
+%         m=length(A)-1;
+%     end
+%     
+%     P0=zeros(m,nw2);
+%     for i=1:nw
+%         P0(:,i*2-1:i*2)=[cos((0:m-1)'*w(i)) sin((0:m-1)'*w(i))];
+%     end
+% %     P=P0*((P0'*P0)\P0');
+% %     s=(eye(m)-P)*x(1:m);
+%     
+%     n0=P0*(pinv(P0'*P0)*P0'*x(1:m)); % noise
+%     s=x(1:m)-n0;                     % signal
     
-    P0=zeros(m,nw2);
-    for i=1:nw
-        P0(:,i*2-1:i*2)=[cos((0:m-1)'*w(i)) sin((0:m-1)'*w(i))];
-    end
-%     P=P0*((P0'*P0)\P0');
-%     s=(eye(m)-P)*x(1:m);
+    [s, ~] = dsp_noise_project(x(1:m), w);  %updated by Ainray on 20210922
     
-    n0=P0*(pinv(P0'*P0)*P0'*x(1:m)); % noise
-    s=x(1:m)-n0;                     % signal
     y(1:m)=s;                        % initial conditions
     na=length(A);
     nb=length(B);
+    
     for i=m+1:n
          y(i)=[y(i-1:-1:i-na+1)' x(i:-1:i-nb+1)']*[-A(2:end);B];
     end
     
     if dual==1
         x= y(end:-1:1);
-        n0=P0*(pinv(P0'*P0)*P0'*x(1:m));
-        s=x(1:m)-n0;
+%         n0=P0*(pinv(P0'*P0)*P0'*x(1:m));
+%         s=x(1:m)-n0;
+        [s, ~] = dsp_noise_project(x(1:m), w);  %updated by Ainray on 20210922
         y(1:m)=s;
         for i=m+1:n
             y(i)=[y(i-1:-1:i-nw2)' x(i:-1:i-nw2)']*[-A(2:nw2+1);B];

@@ -1,4 +1,4 @@
-%function [src_i,t_s,single_num]=prbs_src(t_ele,order,cycle,fs,I,type,pic,n)
+%function [src_i,t_s, single_num]=prbs_src(t_ele,order,cycle,fs, I,type,idlen,pic,n)
 % author: Ainray
 % date: 2014/11/29
 % modified: 2015/4/16,2015/7/28,20170310,20160318, 20170529

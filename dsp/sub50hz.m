@@ -1,10 +1,15 @@
 function g=sub50hz(g,npp,np)
+% g=sub50hz(g, 320, 3)
 % author: Ainray
 % date: 201670619
 % email: wwzhang0421@163.com
-% introduction: reduce 50Hz by substraction
-%               signal to be reduced
-% 
+% introduction: reduce 50Hz and its hormonics by substraction signal to be reduced 
+% modify:
+%   20210922, in old version, the tailing is used to as noise directly,
+%       which limit its usage only for sample rate is integer multiple of 50Hz
+%
+%             in this version, the noise is estmated from tailing data by LS
+
 N=length(npp);
 Ng=length(g);
 for i=1:N

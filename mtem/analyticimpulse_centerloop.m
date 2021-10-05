@@ -23,6 +23,7 @@
 %             evalueated.
 function [g,ts]=analyticimpulse_centerloop(ps,fs,N,a)
 ts=time_vector(zeros(N,1),fs);
-mu0 = 3*pi*1e-7;
+ts(1)=ts(1)+eps;
+mu0 = 4*pi*1e-7;
 theta = 0.5*sqrt(mu0/ps./ts);
 g = ps/mu0/a^3*(3*erf(theta*a)-2/sqrt(pi)*theta*a.*(3+2*theta.*theta*a*a).*exp(-theta.*theta*a*a));

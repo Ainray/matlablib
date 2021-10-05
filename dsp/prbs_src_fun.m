@@ -62,11 +62,11 @@ function src_i =prbs_src_fun(t_ele, order, time, type, pic, n)
     index = (indexofperiod-1)*num_ele + indexofelement; % element index globally
    
     % periodic extension
-    tmp=repmat(m_series,indexofperiod(end),1);
+    tmp=repmat(m_series(:),indexofperiod(end),1);
     m_series=tmp(1:index(end));
     npe = histgi(index);
     src_i = rude(npe, m_series);
-    
+    src_i = src_i(:);
     if(pic~=0)
         figure;
         if nargin<6

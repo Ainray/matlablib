@@ -1,5 +1,5 @@
 % Defaults for this blog post
-width = 6; %6.2992126;     % Width in inches, 16cm/ 7.5cm 2.9527559 inches
+width = 3; %6.2992126;     % Width in inches, 16cm/ 7.5cm 2.9527559 inches
 height = 3;    % Height in inches
 alw = 0.75;    % AxesLineWidth
 fsz = 8;      % Fontsize

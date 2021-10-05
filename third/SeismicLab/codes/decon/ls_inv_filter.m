@@ -58,7 +58,7 @@ function [f,o] = ls_inv_filter(w,NF,Lag,mu);
  f = R\rhs;                   % Filter 
                               % Inversion should have been done with 
                               % a fast solver (Levinson recursion) 
-
+f = f/sum(f);
  if nargout == 2
    o = conv(f,w);               %  Actual output
   end

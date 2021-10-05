@@ -14,6 +14,7 @@ function [step, amp]=filter_analyzer(impulse,varargin)
 %     'BandWidth', numerical band width to be displayed
 %             'B', filter coefficients
 %             'A', filter coefficients
+%          "Ylim", 
 % output: 
 %         step, step response
 %          fre, frequency response
@@ -24,6 +25,8 @@ addRequired(p,'impulse');
 addOptional(p,'Fs',1,@(x) isscalar(x) && isnumeric(x));
 addOptional(p,'BandWidth',[0,0.5], @(x) isvector(x) && numel(x)==2  && x(1)>=0 && x(1)<=0.5...
     && x(2)>=0 && x(2)<=0.5 && x(1)<x(2));
+addOptional(p,'Ylim',[-200,0], @(x) isvector(x) && numel(x)==2);
+addOptional(p,'YTick',-200:20:0, @(x) isvector(x));
 addOptional(p,'B',[],@(x) iscell(x));
 addOptional(p,'A',[],@(x) iscell(x));
 addOptional(p,'sidelv',false,@(x) islogical(x));
@@ -34,6 +37,8 @@ bw=p.Results.BandWidth;
 B=p.Results.B;
 A=p.Results.A;
 sidelv=p.Results.sidelv;
+ylim = p.Results.Ylim;
+ytick = p.Results.YTick;
 if isempty(impulse) && (isempty(A) || isempty(B))
     error('empty input');
 end
@@ -154,7 +159,7 @@ if sidelv==1
         end
     end
 end
-set(gca,'xLim',bw*fs,'yLim',[-200,0],'yTick',[-200:20:0]);
+set(gca,'xLim',bw*fs,'yLim',ylim,'yTick',ytick);
 xlabel(fxlbl);ylabel('Amplitude(dB)');%set(gca,'xLim',[0,0.5]);
 grid on;%legend(varargin{:});
 title('d. Freqency response(dB)');
