@@ -1,4 +1,9 @@
-% lineplot_multitraces(x,z,scale,step,type,exc,rcv)
+% author: Ainray
+% email: wwzhang0421@163.com
+% date: 20220211
+% modified: 20220211, for plot rf waveform data, rf are arragend by columns
+%           20220219, specify axes
+% function lineplot_multitraces(x,z,scale,step,type,rcv,str,log,exc, clr, lw)
 % lineplot_multitraces is used to dispaly multi trace data in the same temporal or spacical scale
 % Input:
 %       x, the temporal or spacial sampling node, more closer to the top or
@@ -15,27 +20,46 @@
 %     log, whether using logarithmic scale
 %     exc, the exclued trace indices or temporal node indices
 %     rcv, the postion indices
-function lineplot_multitraces(x,z,scale,step,type,rcv,str,log,exc)
-if nargin<6
+function lineplot_multitraces(x,z,scale,step,type,rcv,str,log,exc, clr, lw, iscenter, ax)
+if nargin<6|| isempty(rcv)
     rcv=step;
 end
-if nargin<7
+if nargin<7|| isempty(str)
     str = [];
 end
-if nargin<8
+if nargin<8|| isempty(log)
     log=0;
 end
-if nargin<9
+if nargin<9  || isempty(exc)
     exc=-1;
 end
+
+if nargin < 10 || isempty(clr)
+    clr= 'r';
+end
+
+if(nargin<11 || isempty(lw))
+    lw = 1;
+end
+
+if(nargin<12 || isempty(iscenter))
+    iscenter = 0;
+end
+
+if(nargin <13 || isempty(ax))
+    ax = gca;
+end
+
 if length(x) == numel(x)
-      x=v2col(x);
+%       x=v2col(x);
+    x = x(:);
 end
 
 [m,n]=size(z);
 [mx,nx]=size(x);
 
 if(type==1) % vertial view from top to bottom
+    hold(ax,'on'); 
     for i=1:n  
         if(isempty(find(i==exc, 1)))    %excluded ones
             if length(x) ~= numel(x)
@@ -48,7 +72,7 @@ if(type==1) % vertial view from top to bottom
             else
                 plot(z(:,i)*scale(i)+step(i)*i,xx,'k')
             end 
-            hold on;
+%             hold on;
         end
         if(log==1)  % plot center line
             semilogy([sum(step(1:i)),sum(step(1:i))],[xx(1),xx(end)],'--k');
@@ -59,6 +83,7 @@ if(type==1) % vertial view from top to bottom
     axis([0,sum(step),min(min(x))-0.1*min(min(x)),max(max(x))]);
     axis ij;   % flip up-down the fiugre
 elseif type==11 % filled version of type 1, not support log-scale
+    hold(ax,'on'); 
     for i=1:n  % plot the ith trace of data
         if(isempty(find(i==exc, 1)))
             ss=sum(step(1:i));
@@ -69,9 +94,9 @@ elseif type==11 % filled version of type 1, not support log-scale
             end
             fill([z(:,i)*scale(i)+ss;ss*ones(m,1)],[xx;xx(end:-1:1)],'r','edgealpha',0);
         end    
-        hold on;
+%         hold on;
         % center line
-        plot([sum(step(1:i)),sum(step(1:i))],[xx(1),xx(end)],'-k');
+        plot([sum(step(1:i)),sum(step(1:i))],[xx(1),xx(end)],'-r');
     end
     axis([0,sum(step)+step(end),min(min(x))-0.1*min(min(x)),max(max(x))]);
     axis ij;    
@@ -97,6 +122,19 @@ elseif type==11 % filled version of type 1, not support log-scale
 %         set(gca,'yscale','log');
 %     end
 elseif type==2  % horizontal version
+    hold(ax,'on'); 
+    if iscenter == 1
+        for i=1:n  % i the time step
+            if(isempty(find(i==exc, 1))) 
+                if length(x) ~= numel(x)
+                    xx=x(:,i);
+                else
+                    xx=x;
+                end
+                plot(ax, [xx(1),xx(end)],[sum(step(1:i)),sum(step(1:i))],['-',clr]);
+            end
+        end
+    end
      for i=1:n  % i the time step
         if(isempty(find(i==exc, 1))) 
             if length(x) ~= numel(x)
@@ -105,15 +143,13 @@ elseif type==2  % horizontal version
                 xx=x;
             end
             if(log==1)
-                semilogx(xx,z(:,i)*scale(i)+step(i)*i,'r');
+                semilogx(ax,xx,z(:,i)*scale(i)+step(i)*i,clr, 'linewidth',lw);
             else
-                plot(xx,z(:,i)*scale(i)+sum(step(1:i)),'r');         
+                plot(ax, xx,z(:,i)*scale(i)+sum(step(1:i)),clr, 'linewidth',lw);         
             end 
-            hold on;
-            plot([xx(1),xx(end)],[sum(step(1:i)),sum(step(1:i))],'-k');
         end
      end
-     axis([min(min(x))-0.1*min(min(x)),max(max(x)),0,sum(step)+step(end)]);
+     axis(ax, [min(min(x))-0.1*min(min(x)),max(max(x)),0,sum(step)+step(end)]);
 %      ytickindex = 1:3:length(step);
 %      nytick = length(ytickindex);
 %      ytick_ = zeros(nytick,1);
@@ -123,7 +159,8 @@ elseif type==2  % horizontal version
 %      set(gca,'yTick',ytick_,'yTicklabel',rcv(1:3:end));
      
 elseif type==21
-     if mx>1 && nx==1
+    hold(ax,'on');  
+    if mx>1 && nx==1
         x=x';
      end
      for i=1:n  % i the time step
@@ -133,8 +170,9 @@ elseif type==21
             else
                 plot(x,z(:,i)*scale(i)+sum(step(1:i)),'r');            
             end 
-            hold on;
-           x=v2col(x);
+%             hold on;
+%            x=v2col(x);
+           x=x(:);
            X=[x',fliplr(x')];
            y2=z(:,i)*scale(i)+sum(step(1:i));y2=y2';
            y1=ones(1,length(x))*sum(step(1:i));
@@ -156,6 +194,6 @@ elseif type==21
 else
    error(1,'type must be either 1,2 or 3,4');
 end
+hold(ax,'off'); 
 
-hold off;
 

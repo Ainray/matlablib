@@ -15,7 +15,8 @@
 %           'YScale','linear'   linear ('linear') or logarithmic('log') scaling for x axis       
 %     output:
 %           (none)
-
+%example:
+%       plot_start([x y])
 function plot_start(m,varargin)
    p = inputParser;
    defaultfs = 1;   % default sampling rate
