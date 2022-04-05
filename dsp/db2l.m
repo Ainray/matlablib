@@ -11,4 +11,4 @@ function l=db2l(db,factor)
 if nargin<2
     factor=10;
 end
-l=10^(db/factor);
+l=10.^(db/factor);
