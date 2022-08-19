@@ -23,6 +23,6 @@ function res = field_init (suppress)
     Mat_field (5001,suppress);
   else
     Mat_field (5001,1);
-    end
+  end
 
 
