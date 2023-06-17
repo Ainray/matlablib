@@ -10,9 +10,14 @@ fprintf(fid,'Corner point grid\n');
 fprintf(fid,'ASCII\n'); 
 fprintf(fid,'DATASET UNSTRUCTURED_GRID\n');
 
+% nodes
 nx = length(x);
 ny = length(y);
 nz = length(z);
+
+nx1 = nx - 1;
+ny1 = ny - 1;
+nz1 = nz - 1;
 
 nn = nx * ny * nz;
 fprintf(fid,'POINTS  %d  float\n', nn); 
@@ -23,11 +28,13 @@ for k=1:nz
         end
     end
 end
-nc = (nx-1) * (ny-1) * (nz-1);
-nc8 = nc * 8;
-fprintf(fid,'POINTS  %d  %d\n', nc, nc8);
-for i=1:nc
-    [i, j, k] = p3d_index2ijk(i,nx-1, ny-1);
+nc = nx1 * ny1 * nz1;
+nc9 = nc * 9;
+fprintf(fid,'CELLS  %d  %d\n', nc, nc9);
+
+for ic=0:nc-1
+    
+    [i, j, k] = p3d_index2ijk(ic, nx1, ny1);
     
     p = ones(8, 3);
     

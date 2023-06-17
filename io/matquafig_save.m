@@ -9,7 +9,7 @@ if nargin<3 || isempty(height)
     height = 3;
 end
 if nargin<4 || isempty(res)
-    res = '-r300';
+    res = '-r600';
 end
 
 % Here we preserve the size of the image when we save it.
@@ -21,7 +21,9 @@ bottom = (papersize(2)- height)/2;
 myfiguresize = [left, bottom, width, height];
 set(gcf,'PaperPosition', myfiguresize);
 
+
 % save
+savefig(fname);
 % issues 318, refer to https://github.com/altmany/export_fig/issues/318
 set(gcf, 'visible', 'off')
 export_fig(fname, '-png', '-pdf', '-eps', res);

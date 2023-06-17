@@ -1,4 +1,4 @@
-function s = em_edipole_h_sphere(r, theta, t, t0, amp)
+function s = em_hdipole_free_h_xyz(r, theta, t, t0, amp)
 % author: Ainray
 % date: 20230526
 % email: wwzhang0421@163.com

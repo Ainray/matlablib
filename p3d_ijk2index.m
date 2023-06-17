@@ -7,5 +7,5 @@ function index = p3d_ijk2index(ijk, nx, ny)
 i = ijk(:,1);
 j = ijk(:,2);
 k = ijk(:,3);
-index = i + (j-1) * nx + (k-1) * nx * ny;
-
+% index = i + (j-1) * nx + (k-1) * nx * ny;
+index = i + j * nx + k * nx * ny;

@@ -32,7 +32,7 @@ for j=1:size(x,2)
     end
     if N>5
         for i=size(x,1)-(N-1)/2:size(x,1)
-            y(i,j)=sum(x(i-2:min(i+2,length(x)), j))/(min(i+2,size(x,1 ))-i+3); % 5-point moving average
+            y(i,j)=sum(x(i-2:min(i+2,size(x,1)), j))/(min(i+2,size(x,1 ))-i+3); % 5-point moving average
         end 
     end
     % y(length(x)-(N-1)/2:length(x))=x(length(x)-(N-1)/2:length(x));
