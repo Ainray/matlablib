@@ -1,9 +1,8 @@
-function [hr, ht, hphi, hnorm] = em_rmdipole_homo_fre_h_sphere(coords, freqs, sigma, epsilon,mu, m)
+function [hr, ht, hphi, hnorm] = em_rmdipole_halfspace_fre_h_sphere(coords, freqs, sigma, epsilon,mu, m)
 % author: Ainray
 % date: 20230526
 % email: wwzhang0421@163.com
-% introduction: h filed of rotating counterclockwisely magnetic dipole in xy-plane in Spheric coordinates, the
-%               the magnetic moment is assumed to be unit in default.
+% introduction: em filed on the surface of the earth of rotating magnetic dipole in xz-plane e
 % test example,
 % freqs=100;
 % sig = 0.01;

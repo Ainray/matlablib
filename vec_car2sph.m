@@ -19,11 +19,20 @@ cosphi = x./rho;
 
 n = size(vc, 2);
 vs = zeros(size(vc));
-for i=1:n
-    vs(:,i) = [sintheta(i) .* cosphi(i) sintheta(i) .* sinphi(i) costheta(i); ...
+if size(coords,2) == 1
+    for i=1:n
+        vs(:,i) = [sintheta .* cosphi sintheta.* sinphi costheta; ...
+        costheta.* cosphi costheta.* sinphi -sintheta; ...
+        -sinphi cosphi 0] * vc(:,i);
+    end    
+else
+    for i=1:n
+        vs(:,i) = [sintheta(i) .* cosphi(i) sintheta(i) .* sinphi(i) costheta(i); ...
         costheta(i) .* cosphi(i) costheta(i) .* sinphi(i) -sintheta(i); ...
         -sinphi(i) cosphi(i) 0] * vc(:,i);
+    end
 end
+
 vr = vs(1,:)';
 vt = vs(2,:)';
 vphi = vs(3,:)';

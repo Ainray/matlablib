@@ -1,4 +1,4 @@
-function [hl, ht1, ht2, hnorm] = em_mdipole_homo_fre_h_xyz(coords, freqs, direction, sigma, epsilon,mu, m)
+function [hl, ht1, ht2, hnorm] = em_mdipole_homo_fre_em_xyz(coords, freqs, direction, sigma, epsilon,mu, m)
 % author: Ainray
 % date: 20230526
 % email: wwzhang0421@163.com

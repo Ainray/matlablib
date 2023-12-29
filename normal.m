@@ -16,17 +16,26 @@ function [nz,mz]=normal(z,dim)
 if nargin<2
     dim=1;   
 end
+
+[m,n]=size(z);
+if m==1 || n==1
+    z = z(:);
+    dim = 1;
+    [m, n] = size(z);
+end
 if dim~=1 && dim~=2
     error('Dimension must be 1 or 2.');
 end
+
 if dim==2
     z=z';
+    [m, n] = size(z);
 end
-[m,n]=size(z);
-[mv,I]=max(abs(z));
-indx=I+(0:n-1)*m;
+
+[mv,I] = max(abs(z));
+indx = I + (0:n-1)*m;
 mz=z(indx);
-mmat=ones(m,1)*v2row(mv);
+mmat=ones(m,1)* mv(:)';
 nz=z./mmat;
 if dim==2
     nz=nz';
