@@ -1,4 +1,4 @@
-function [hx, hy, hz, h] = em_mdipole_h_halfspace_freq_em_xyz_z_up(sigma, x, y,freqs)
+function [hx, hy, hz, h] = em_mdipole_h_halfspace_freq_em_xyz_z_up(sigma, x, y, freqs)
 % author: Ainray
 % date: 20230526
 % email: wwzhang0421@163.com

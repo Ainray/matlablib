@@ -1,4 +1,4 @@
-function [hl, ht1, ht2, hnorm] = em_mdipole_homo_fre_h_xyz(coords, freqs, direction, sigma, epsilon,mu, m)
+function [hl, ht1, ht2, hnorm] = em_mdipole_homo_fre_h_xyz(coords, freqs, direction, sigma, epsilon,mu)
 % author: Ainray
 % date: 20230526
 % email: wwzhang0421@163.com
@@ -36,15 +36,12 @@ end
 if (nargin < 6 || isempty(mu))
     mu = 1.0;
 end
-if (nargin < 7 || isempty(m))
-    m = 1.0;
-end
 
 if (direction ~= 0 && direction ~= 1 && direction ~= 2)
     error('direction of dipole must be 0, 1 or 2.');
 end
 
-factor = m/4/pi;
+factor = 1/4/pi;
 epsilon0 = 8.854187817e-12;
 mu0 = 4*pi*1e-7;
 ndim = 3;

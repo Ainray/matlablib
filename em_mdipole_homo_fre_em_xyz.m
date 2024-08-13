@@ -1,4 +1,4 @@
-function [hl, ht1, ht2, hnorm] = em_mdipole_homo_fre_em_xyz(coords, freqs, direction, sigma, epsilon,mu, m)
+function [hl, ht1, ht2, hnorm] = em_mdipole_homo_fre_em_xyz(coords, freqs, direction, sigma, epsilon,mu)
 % author: Ainray
 % date: 20230526
 % email: wwzhang0421@163.com
@@ -15,11 +15,11 @@ function [hl, ht1, ht2, hnorm] = em_mdipole_homo_fre_em_xyz(coords, freqs, direc
 % 
 %         [hx, hy, hz] = em_mdipole_homo_fre_h_xyz(coords, freqs, 0, sigma);
 % 
-%         [lw, msz, width, height, hf, pos, alw, fsz] = matquafig_load(6,3,24,1.5,10);
+%         [lw, msz, width, height, hf, pos, alw, fsz] = matquafig_load(6,6,24,1.5,10);
 % 
-%         loglog(freqs, abs(real(hx(:,1))), 'r', 'linewidth', lw);
+%         p2d_logplot(freqs, real(hx(:,1)), 'r', 'Real', 'linewidth', lw);
 %         hold on;
-%         loglog(freqs, abs(imag(hx(:,1))), 'b', 'linewidth', lw);
+%         p2d_logplot(freqs, imag(hx(:,1)), 'b', 'Imag', 'linewidth', lw);
 %         legend('real','imag', 'Location', 'southeast');
 %         xlabel ('frequency (Hz)');
 %         ylabel ('H_x (A/m)');
@@ -36,15 +36,12 @@ end
 if (nargin < 6 || isempty(mu))
     mu = 1.0;
 end
-if (nargin < 7 || isempty(m))
-    m = 1.0;
-end
 
 if (direction ~= 0 && direction ~= 1 && direction ~= 2)
     error('direction of dipole must be 0, 1 or 2.');
 end
 
-factor = m/4/pi;
+factor = 1/4/pi;
 epsilon0 = 8.854187817e-12;
 mu0 = 4*pi*1e-7;
 ndim = 3;

@@ -25,8 +25,8 @@ addRequired(p,'impulse');
 addOptional(p,'Fs',1,@(x) isscalar(x) && isnumeric(x));
 addOptional(p,'BandWidth',[0,0.5], @(x) isvector(x) && numel(x)==2  && x(1)>=0 && x(1)<=0.5...
     && x(2)>=0 && x(2)<=0.5 && x(1)<x(2));
-addOptional(p,'Ylim',[-200,0], @(x) isvector(x) && numel(x)==2);
-addOptional(p,'YTick',-200:20:0, @(x) isvector(x));
+addOptional(p,'Ylim',[-80,0], @(x) isvector(x) && numel(x)==2);
+addOptional(p,'YTick',-80:20:0, @(x) isvector(x));
 addOptional(p,'B',[],@(x) iscell(x));
 addOptional(p,'A',[],@(x) iscell(x));
 addOptional(p,'sidelv',false,@(x) islogical(x));
@@ -100,7 +100,8 @@ for i=1:n  % column-by-column
     end
 end
 % %visuliztion
-h=figure('NumberTitle','off','Name','Filter Analyzier');clf; 
+h=figure('NumberTitle','off','Name','Filter Analyzier', 'Color',[1,1,1]);
+clf; 
 t_s=time_vector(impulse,fs);
 subplot(2,2,1);plot(t_s,impulse,'LineWidth',2);
 hold on;
@@ -123,7 +124,8 @@ xlabel(xlbl);ylabel('Amplitude');
 title('b. Step response');%legend(varargin{:});
 %set(gca,'ytick',[-0.2:0.2:1.2],'yticklabel',num2cell([-0.2:0.2:1.2]));
 
-subplot(2,2,2);plot(time_vector(amp(:,1),fftsize/fs),amp,'LineWidth',2);
+subplot(2,2,2);
+semilogx(time_vector(amp(:,1),fftsize/fs),amp,'LineWidth',2);
 xlabel(fxlbl);ylabel('Amplitude');
 grid on; 
 % %20160308
@@ -145,7 +147,8 @@ grid on;hold on;
 title('c. Freqency response');%legend(varargin{:});
 %set(gca,'ytick',[-0.2:0.2:1.2],'yticklabel',num2cell([-0.2:0.2:1.2]));
 ts=time_vector(amp(:,1),fftsize/fs);
-subplot(2,2,4);plot(ts,max(-200,20*log10(amp)),'LineWidth',2);
+subplot(2,2,4);
+semilogx(ts,max(-200,20*log10(amp)),'LineWidth',2);
 if sidelv==1 
     for i=1:n
         if length(maxmins{i})>2

@@ -41,8 +41,8 @@ else
     direction2 = 1;       
 end
 
-[hl1, ht11, ht12] = em_mdipole_homo_fre_h_xyz(coords, freqs, direction1, sigma, epsilon, mu, m);
-[hl2, ht21, ht22] = em_mdipole_homo_fre_h_xyz(coords, freqs, direction2, sigma, epsilon, mu, m);
+[hl1, ht11, ht12] = em_mdipole_homo_fre_h_xyz(coords, freqs, direction1, sigma, epsilon, mu);
+[hl2, ht21, ht22] = em_mdipole_homo_fre_h_xyz(coords, freqs, direction2, sigma, epsilon, mu);
 
 ejpi = exp(-1i*pi/2);
 hin1 = hl1 + ejpi*ht22;

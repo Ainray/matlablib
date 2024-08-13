@@ -64,10 +64,6 @@ hz2 = zeros(nf, np);
 hx2 = zeros(nf, np);
 hy2 = zeros(nf, np);
 
-hz = zeros(nf, np);
-hx = zeros(nf, np);
-hy = zeros(nf, np);
-
 k2 = omega .* omega * mu0 * epsilon0 - 1i*omega*mu0*sigma;
 k = sqrt(k2);
 
@@ -96,4 +92,4 @@ end
 hx = hx1 + exp(-1i*pi/2) * hx2;
 hy = hy1 + exp(-1i*pi/2) * hy2;
 hz = hz1 + exp(-1i*pi/2) * hz2;
-h = sqrt(hx.*hx + hy.* hy + hz .* hz);
+h = sqrt(hx.*conj(hx) + hy.* conj(hy) + hz .* conj(hz));

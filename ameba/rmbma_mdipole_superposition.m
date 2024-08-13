@@ -1,4 +1,4 @@
-function [hin1, hin2, hout] = rmbma_mdipole_superposition(coords, freqs, direction, theta, sigma, epsilon, mu, m)
+function [hin1, hin2, hout] = rmbma_mdipole_superposition(coords, freqs, direction, sigma, epsilon, mu, m)
 % author: Ainray
 % date: 20230526
 % email: wwzhang0421@163.com
@@ -45,21 +45,14 @@ if (nargin < 3 || isempty(direction))
     direction = 2; % 0: x, 1: y, 2: z
 end
 
-if (nargin < 4 || isempty(theta))
-    theta = 0.0; 
-end
-
-if (nargin < 5 || isempty(sigma))
+if (nargin < 4 || isempty(sigma))
     sigma = 0.0; %vacuum
 end
-if (nargin < 6 || isempty(epsilon))
+if (nargin < 5 || isempty(epsilon))
     epsilon = 1.0;
 end
-if (nargin < 7 || isempty(mu))
+if (nargin < 6 || isempty(mu))
     mu = 1.0;
-end
-if (nargin < 8 || isempty(m))
-    m = 1.0;
 end
 
 if (direction ~= 0 && direction ~= 1 && direction ~= 2)
@@ -77,8 +70,8 @@ else
     direction2 = 1;       
 end
 
-[hl1, ht11, ht12] = em_mdipole_homo_fre_h_xyz(coords, freqs, direction1, sigma, epsilon, mu, m);
-[hl2, ht21, ht22] = em_mdipole_homo_fre_h_xyz(coords, freqs, direction2, sigma, epsilon, mu, m);
+[hl1, ht11, ht12] = em_mdipole_homo_fre_h_xyz(coords, freqs, direction1, sigma, epsilon, mu);
+[hl2, ht21, ht22] = em_mdipole_homo_fre_h_xyz(coords, freqs, direction2, sigma, epsilon, mu);
 
 ejpi = exp(-1i*pi/2);
 hin1 = hl1 + ejpi*ht22;

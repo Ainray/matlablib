@@ -1,4 +1,5 @@
 #ignore temperal files created by matlab
+*.zip
 *.asv
 ~*
 ma/

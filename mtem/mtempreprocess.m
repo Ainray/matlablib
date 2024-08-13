@@ -1,3 +1,4 @@
+
 function mtempreprocess(imps)
 % version 1.3
 % date: 20160519, 20170614, 20180327
@@ -1155,7 +1156,7 @@ switch ync
         % update the path dir
         sdc=getappdata(src,'sdc');
         rdc=getappdata(src,'rdc');
-        dirwrite(sdc,rdc);
+        %dirwrite(sdc,rdc);
         delete(src);
 end
 

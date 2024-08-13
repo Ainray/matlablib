@@ -1,4 +1,4 @@
-function k = em_complexwavenumber(freqs, sigma, epsilon, mu)
+function [k, lambda, vec] = em_complexwavenumber(freqs, sigma, epsilon, mu)
 % author: Ainray
 % date: 20230526
 % email: wwzhang0421@163.com
@@ -23,3 +23,5 @@ mu  = mu0 * mu;
 omega = 2*pi*freqs;
 kk = omega .* omega * mu * epsilon - 1i * omega * mu * sigma;
 k = sqrt(kk);
+lambda = 2*pi/real(k);
+vec = 2*pi*freqs / real(k);

@@ -25,9 +25,9 @@ set(gcf,'PaperPosition', myfiguresize);
 % save
 savefig(fname);
 % issues 318, refer to https://github.com/altmany/export_fig/issues/318
-set(gcf, 'visible', 'off')
+% set(gcf, 'visible', 'off')
 export_fig(fname, '-png', '-pdf', '-eps', res);
-set(gcf, 'visible', 'on')
+% set(gcf, 'visible', 'on')
 
 % eps 2 png
 fid=fopen(['eps2png_',fname,'.bat'],'w');

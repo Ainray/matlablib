@@ -21,7 +21,7 @@ if nargin< 4 || isempty(lwi)
 end
 
 if nargin< 5 || isempty(mszi)
-    mszi = 4;       % MarkerSize
+    mszi = 2;       % MarkerSize
 end
 
 if nargin< 6 || isempty(alwi)
